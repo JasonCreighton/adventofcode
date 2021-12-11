@@ -20,9 +20,24 @@ directions_positions([D|DS], [P|PS], [PrevX, PrevY]) :-
     P = [NewX, NewY],
     directions_positions(DS, PS, P).
 
+directions_positions(Dirs, Positions) :-
+    directions_positions(Dirs, PositionsWithoutStart, [0,0]),
+    Positions = [[0,0]|PositionsWithoutStart].
+
+every_other([], [], []).
+every_other([Odd,Even|Rest], [Odd|Odds], [Even|Evens]) :- every_other(Rest, Odds, Evens).
+
 part1_answer(N) :-
     puzzle_input(Dirs),
-    directions_positions(Dirs, PositionsWithoutStart, [0,0]),
-    Positions = [[0,0]|PositionsWithoutStart],
+    directions_positions(Dirs, Positions),
     sort(Positions, UniquePositions),
+    length(UniquePositions, N).
+
+part2_answer(N) :-
+    puzzle_input(AllDirs),
+    every_other(AllDirs, SantaDirs, RoboSantaDirs),
+    directions_positions(SantaDirs, SantaPositions),
+    directions_positions(RoboSantaDirs, RoboSantaPositions),
+    append(SantaPositions, RoboSantaPositions, AllPositions),
+    sort(AllPositions, UniquePositions),
     length(UniquePositions, N).
