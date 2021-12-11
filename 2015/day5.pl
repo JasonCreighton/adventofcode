@@ -29,7 +29,7 @@ forbidden([x,y|_], 1) :- !.
 forbidden([], 0) :- !.
 forbidden([_|XS], IsForbidden) :- forbidden(XS, IsForbidden).
 
-nice(Str) :-
+part1_nice(Str) :-
     string_chars(Str, CharList),
     chars_num_vowels(CharList, NumVowels),
     NumVowels >= 3,
@@ -37,7 +37,25 @@ nice(Str) :-
     forbidden(CharList, IsForbidden),
     IsForbidden is 0.
 
+matching_pairs(Str) :-
+    sub_string(Str, PairIdx1, 2, _, Pair),
+    sub_string(Str, PairIdx2, 2, _, Pair),
+    PairIdx2 >= (PairIdx1 + 2).
+
+repeats_with_letter_between([X,_,X|_]).
+repeats_with_letter_between([_|XS]) :- repeats_with_letter_between(XS).
+
+part2_nice(Str) :-
+    string_chars(Str, CharList),
+    repeats_with_letter_between(CharList),
+    matching_pairs(Str).
+
 part1_answer(N) :-
     puzzle_input(Words),
-    include(nice, Words, NiceWords),
+    include(part1_nice, Words, NiceWords),
     length(NiceWords, N).
+
+part2_answer(N) :-
+    puzzle_input(Words),
+    include(part2_nice, Words, NiceWords),
+    length(NiceWords, N).    
