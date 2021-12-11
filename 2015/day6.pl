@@ -31,32 +31,40 @@ inside(rect(X1, Y1, X2, Y2), point(PX, PY)) :-
     PY >= Y1,
     PY =< Y2.
 
-operation_states(toggle, 0, 1).
-operation_states(toggle, 1, 0).
-operation_states(on, _, 1).
-operation_states(off, _, 0).
+part1_operation_states(toggle, 0, 1).
+part1_operation_states(toggle, 1, 0).
+part1_operation_states(on, _, 1).
+part1_operation_states(off, _, 0).
 
-rect_point_operation_states(Rect, Point, Op, Prev, Next) :-
+part2_operation_states(toggle, B1, B2) :- B2 is B1 + 2.
+part2_operation_states(on, B1, B2) :- B2 is B1 + 1.
+part2_operation_states(off, B1, B2) :- B2 is max(B1 - 1, 0).    
+
+rect_point_operation_states(OpPred, Rect, Point, Op, Prev, Next) :-
     (
         inside(Rect, Point)
-    ->  operation_states(Op, Prev, Next)
+    ->  call(OpPred, Op, Prev, Next)
     ;   Next = Prev
     ).
 
-commands_states([], _, Final, Final).
-commands_states([cmd(Op, Rect)|Cmds], Point, Prev, Final) :-
-    rect_point_operation_states(Rect, Point, Op, Prev, Next),
-    commands_states(Cmds, Point, Next, Final).
+commands_states([], _, _, Final, Final).
+commands_states([cmd(Op, Rect)|Cmds], OpPred, Point, Prev, Final) :-
+    rect_point_operation_states(OpPred, Rect, Point, Op, Prev, Next),
+    commands_states(Cmds, OpPred, Point, Next, Final).
 
-final_light_state(CmdList, Point, Final) :-
-    commands_states(CmdList, Point, 0, Final).
+final_light_state(CmdList, OpPred, Point, Final) :-
+    commands_states(CmdList, OpPred, Point, 0, Final).
 
-all_final_light_states(CmdList, Final) :-
+all_final_light_states(CmdList, OpPred, Final) :-
     between(0, 999, X),
     format("X: ~d\n", [X]),
     between(0, 999, Y),
-    final_light_state(CmdList, point(X, Y), Final).
+    final_light_state(CmdList, OpPred, point(X, Y), Final).
 
 part1_answer(N) :-
     puzzle_input(CmdList),
-    aggregate_all(sum(X), all_final_light_states(CmdList, X), N).
+    aggregate_all(sum(X), all_final_light_states(CmdList, part1_operation_states, X), N).
+
+part2_answer(N) :-
+    puzzle_input(CmdList),
+    aggregate_all(sum(X), all_final_light_states(CmdList, part2_operation_states, X), N).
