@@ -43,6 +43,12 @@ wire_signal(WireName, Out) :-
     func_signal(LogicFunc, OutFullPrecision),
     Out is OutFullPrecision /\ 0xFFFF.
 
-:-
+answers(Part1, Part2) :-
     retractall(wire_func(_,_)),
-    load_wire_funcs.
+    load_wire_funcs,
+    abolish_all_tables,
+    wire_signal(a, Part1),
+    retract(wire_func(b, _)),
+    assert(wire_func(b, copy(const(Part1)))),
+    abolish_all_tables,
+    wire_signal(a, Part2).
