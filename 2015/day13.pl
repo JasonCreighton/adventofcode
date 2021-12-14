@@ -28,9 +28,14 @@ net_happiness(A, B, N) :-
     happiness(A, B, ADelta),
     happiness(B, A, BDelta),
     N is ADelta + BDelta.
+net_happiness(self, _, 0).
+net_happiness(_, self, 0).
 
 seating(S) :-
     permutation([alice, bob, carol, david, eric, frank, george, mallory], S).
+
+part2_seating(S) :-
+    permutation([self, alice, bob, carol, david, eric, frank, george, mallory], S).
 
 seating_happiness([A], Happiness, Z) :- net_happiness(A, Z, Happiness).
 seating_happiness([A,B|Rest], Happiness, Z) :-
@@ -42,5 +47,9 @@ seating_happiness([First|Rest], Happiness) :- seating_happiness([First|Rest], Ha
 
 part1_answer(N) :-
     aggregate_all(max(H), (seating(S), seating_happiness(S, H)), N).
+
+part2_answer(N) :-
+    aggregate_all(max(H), (part2_seating(S), seating_happiness(S, H)), N).
+
 
 :- forall(load_facts, true).
