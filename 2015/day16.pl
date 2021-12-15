@@ -1,3 +1,4 @@
+:- use_module(library(clpfd)).
 :- dynamic sue/2.
 
 read_file(File, Str) :-
@@ -43,5 +44,24 @@ part1_answer(N) :-
         cars: 2,
         perfumes: 1
     }).
+
+part2_answer(N) :-
+    Cats #> 7,
+    Trees #> 3,
+    Pomeranians #< 3,
+    Goldfish #< 5,
+    sue_matching(N, _{
+        children: 3,
+        cats: Cats,
+        samoyeds: 2,
+        pomeranians: Pomeranians,
+        akitas: 0,
+        vizslas: 0,
+        goldfish: Goldfish,
+        trees: Trees,
+        cars: 2,
+        perfumes: 1
+    }).
+
 
 :- forall(load_facts, true).
