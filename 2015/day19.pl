@@ -35,10 +35,13 @@ process_line(Line) :-
     string_molecule_list(Line, PuzInput),
     assert(puzzle_input(PuzInput)).
 
-possible_replacement([], []).
-possible_replacement([X|XS], Replacement) :-
-    (X2 = [X]; replacement(X, X2)),
-    possible_replacement(XS, XS2),
-    append(X2, XS2, Replacement).
+one_replacement([X|XS], Replacement) :-
+    replacement(X, X2),
+    append(X2, XS, Replacement).
+one_replacement([X|XS], [X|Replacement]) :- one_replacement(XS, Replacement).
 
+part1_answer(N) :-
+    puzzle_input(Input),
+    aggregate(count, X, one_replacement(Input, X), N).
+    
 :- forall(load_facts, true).
