@@ -35,13 +35,24 @@ process_line(Line) :-
     string_molecule_list(Line, PuzInput),
     assert(puzzle_input(PuzInput)).
 
-one_replacement([X|XS], Replacement) :-
+one_step([X|XS], Replacement) :-
     replacement(X, X2),
     append(X2, XS, Replacement).
-one_replacement([X|XS], [X|Replacement]) :- one_replacement(XS, Replacement).
+one_step([X|XS], [X|Replacement]) :- one_step(XS, Replacement).
+
+num_steps(Src, Src, 0).
+num_steps(Src, Dest, N) :-
+    % Greedy heuristic of selecting smallest resulting list, seems to be needed for practical termination
+    aggregate_all(min(Len, X), (one_step(X, Dest), length(X, Len)), min(_, X)),
+    num_steps(Src, X, NSrcToX),
+    N is NSrcToX + 1.
 
 part1_answer(N) :-
     puzzle_input(Input),
-    aggregate(count, X, one_replacement(Input, X), N).
-    
+    aggregate(count, X, one_step(Input, X), N).
+
+part2_answer(N) :-
+    puzzle_input(Input),
+    num_steps([e], Input, N).
+
 :- forall(load_facts, true).
