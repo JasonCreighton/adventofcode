@@ -16,6 +16,10 @@ boss_stats(55, 8).
 % player_stats(HitPoints, StartingMana)
 player_stats(50, 500).
 
+% Uncomment for part1/part2
+%player_bleeding(0). % Part 1
+player_bleeding(1). % Part 2
+
 effect_active(Spell, SpellHistory, RemainingTurns) :-
     effect(Spell, TurnLimit, _, _, _),
     nth0(TurnsAgo, SpellHistory, Spell),
@@ -25,7 +29,7 @@ effect_active(Spell, SpellHistory, RemainingTurns) :-
 active_effects_sum(SpellHistory, Armor, Damage, Mana) :-
     aggregate_all(x(sum(A), sum(D), sum(M)), (effect(E, _, A, D, M), effect_active(E, SpellHistory, _)), x(Armor, Damage, Mana)).
 
-turn(gamestate(player, PlayerHitPoints, PlayerMana, BossHitPoints, SpellHistory), NewState) :-
+turn(inprogress(player, PlayerHitPoints, PlayerMana, BossHitPoints, SpellHistory), NewState) :-
     spell(Spell, SpellManaCost, SpellDamage, SpellHealing),
     (
         effect_active(Spell, SpellHistory, EffectRemainingTerms)
@@ -33,24 +37,29 @@ turn(gamestate(player, PlayerHitPoints, PlayerMana, BossHitPoints, SpellHistory)
     ;   true
     ),
     active_effects_sum(SpellHistory, _, EffectDamage, EffectMana),
-    NewPlayerHitPoints is PlayerHitPoints + SpellHealing,
+    player_bleeding(BleedingPoints),
+    NewPlayerHitPointsBeforeEffects = PlayerHitPoints - BleedingPoints,
+    NewPlayerHitPoints is NewPlayerHitPointsBeforeEffects + SpellHealing,
     NewPlayerMana is PlayerMana - SpellManaCost + EffectMana,
     NewPlayerMana >= 0,
     NewBossHitPoints is BossHitPoints - SpellDamage - EffectDamage,
-    NewState = gamestate(boss, NewPlayerHitPoints, NewPlayerMana, NewBossHitPoints, [Spell|SpellHistory]).
+    (
+        (NewPlayerHitPointsBeforeEffects =< 0, NewState = wonby(boss, SpellHistory), !)
+    ;   (NewBossHitPoints =< 0, NewState = wonby(player, [Spell|SpellHistory]), !)
+    ;   NewState = inprogress(boss, NewPlayerHitPoints, NewPlayerMana, NewBossHitPoints, [Spell|SpellHistory])
+    ).
 
-turn(gamestate(boss, PlayerHitPoints, PlayerMana, BossHitPoints, SpellHistory), NewState) :-
+turn(inprogress(boss, PlayerHitPoints, PlayerMana, BossHitPoints, SpellHistory), NewState) :-
     boss_stats(_, BossDamage),
     active_effects_sum(SpellHistory, EffectArmor, EffectDamage, EffectMana),
     NewPlayerHitPoints is PlayerHitPoints - max(1, BossDamage - EffectArmor),
     NewPlayerMana is PlayerMana + EffectMana,
     NewBossHitPoints is BossHitPoints - EffectDamage,
-    NewState = gamestate(player, NewPlayerHitPoints, NewPlayerMana, NewBossHitPoints, [bossattack|SpellHistory]).
-
-in_progress(gamestate(_, PHP, _, BHP, _)) :- PHP >= 0, BHP >= 0.
-
-winner(player, gamestate(_, _, _, BHP, _)) :- BHP < 0.
-winner(boss, gamestate(_, PHP, _, BHP, _)) :- BHP >= 0, PHP < 0.
+    (
+        (NewBossHitPoints =< 0, NewState = wonby(player, SpellHistory), !)
+    ;   (NewPlayerHitPoints =< 0, NewState = wonby(boss, [bossattack|SpellHistory]), !)
+    ;   NewState = inprogress(player, NewPlayerHitPoints, NewPlayerMana, NewBossHitPoints, [bossattack|SpellHistory])
+    ).
 
 spell_mana_cost(bossattack, 0) :- !.
 spell_mana_cost(Spell, Cost) :- spell(Spell, Cost, _, _).
@@ -59,18 +68,18 @@ mana_spent(SpellHistory, Total) :-
     sum_list(SpellCosts, Total).
 
 eventual_winner(Winner, State, FinalState) :-
-    gamestate(_, _, _, _, SpellHistory) = State,
-    mana_spent(SpellHistory, ManaSpent),
     (
-        in_progress(State)
+        inprogress(_, _, _, _, SpellHistory) = State
     ->  (
+            mana_spent(SpellHistory, ManaSpent),
             nb_getval(best_mana_spent, CurrentBestManaSpent),
             ManaSpent < CurrentBestManaSpent,
             turn(State, NextState),
             eventual_winner(Winner, NextState, FinalState)
         )
     ;   (
-            winner(Winner, State),
+            wonby(Winner, SpellHistory) = State,
+            mana_spent(SpellHistory, ManaSpent),
             nb_getval(best_mana_spent, CurrentBestManaSpent),
             (
                 ManaSpent < CurrentBestManaSpent
@@ -80,9 +89,9 @@ eventual_winner(Winner, State, FinalState) :-
             FinalState = State)
     ).
 
-part1_answer(X) :-
+part_answer(X) :-
     nb_setval(best_mana_spent, 999999),
     player_stats(PlayerHitPoints, PlayerMana),
     boss_stats(BossHitPoints, _),
-    forall(eventual_winner(player, gamestate(player, PlayerHitPoints, PlayerMana, BossHitPoints, []), _), true),
+    forall(eventual_winner(player, inprogress(player, PlayerHitPoints, PlayerMana, BossHitPoints, []), _), true),
     nb_getval(best_mana_spent, X).
