@@ -35,17 +35,23 @@ player_stats(Cost, 100, Damage, Armor) :-
 turns_to_kill(HitPoints, NetDamage, TurnsToKill) :-
     TurnsToKill is (HitPoints + (NetDamage - 1)) div NetDamage.
 
-player_wins(PlayerHitPoints, PlayerNetDamage, BossHitPoints, BossNetDamage) :-
+wins(Winner, PlayerHitPoints, PlayerNetDamage, BossHitPoints, BossNetDamage) :-
     turns_to_kill(BossHitPoints, PlayerNetDamage, PlayerTurnsToKillBoss),
     turns_to_kill(PlayerHitPoints, BossNetDamage, BossTurnsToKillPlayer),
-    PlayerTurnsToKillBoss =< BossTurnsToKillPlayer.
+    (
+        (Winner = player, PlayerTurnsToKillBoss =< BossTurnsToKillPlayer)
+    ;   (Winner = boss,   BossTurnsToKillPlayer <  PlayerTurnsToKillBoss)
+    ).
 
-player_wins_spending(Cost) :-
+wins_spending(Winner, Cost) :-
     player_stats(Cost, PlayerHitPoints, PlayerDamage, PlayerArmor),
     boss_stats(BossHitPoints, BossDamage, BossArmor),
     PlayerNetDamage is max(1, PlayerDamage - BossArmor),
     BossNetDamage is max(1, BossDamage - PlayerArmor),
-    player_wins(PlayerHitPoints, PlayerNetDamage, BossHitPoints, BossNetDamage).
+    wins(Winner, PlayerHitPoints, PlayerNetDamage, BossHitPoints, BossNetDamage).
 
 part1_answer(N) :-
-    between(0, 1000, N), player_wins_spending(N).
+    aggregate_all(min(X), wins_spending(player, X), N).
+
+part2_answer(N) :-
+    aggregate_all(max(X), wins_spending(boss, X), N).
