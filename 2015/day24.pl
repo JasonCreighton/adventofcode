@@ -9,7 +9,8 @@ puzzle_input([1, 2, 3, 5, 7, 13, 17, 19, 23, 29, 31, 37, 41, 43, 53, 59, 61, 67,
 % number (512). 4 packages is clearly not enough, so it must be 6.
 %
 % Intuitively it seems like we should pick large numbers to minimize the
-% product. So could it be that the first group is just this?
+% product. (eg, both 50 + 50 and 99 + 1 equal 100, but 50 * 50 is bigger than
+% 99 * 1) So could it be that the first group is just this?
 %
 %     113 + 109 + 107 + 103 + 79 + 1 = 512
 %
