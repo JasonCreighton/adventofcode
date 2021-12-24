@@ -1,3 +1,5 @@
+use regex::Regex;
+
 fn flatten_coords(width: usize, height: usize, x: usize, y: usize) -> usize {
     assert!(x < width);
     assert!(y < height);
@@ -60,5 +62,37 @@ fn test_example() {
 }
 
 pub fn run() {
+    let puzzle_input = std::fs::read_to_string("inputs/day8.txt").unwrap();
+    let width = 50;
+    let height = 6;
+    let mut screen = vec![false; width * height];
+    let re_rect = Regex::new(r"^rect ([0-9]+)x([0-9]+)$").unwrap();
+    let re_rotate = Regex::new(r"^rotate (row|column) [xy]=([0-9]+) by ([0-9]+)$").unwrap();
+
+    for line in puzzle_input.lines() {
+        if let Some(captures) = re_rect.captures(line) {
+            let rect_width: usize = captures[1].parse().unwrap();
+            let rect_height: usize = captures[2].parse().unwrap();
+            screen = rect(&screen, width, height, rect_width, rect_height);
+        } else if let Some(captures) = re_rotate.captures(line) {
+            let row_or_column = &captures[1];
+            let x_or_y: usize = captures[2].parse().unwrap();
+            let rotate_amount: usize = captures[3].parse().unwrap();
+            if row_or_column == "row" {
+                screen = rotate_row(&screen, width, height, x_or_y, rotate_amount);
+            } else if row_or_column == "column" {
+                screen = rotate_column(&screen, width, height, x_or_y, rotate_amount);
+            } else {
+                panic!("Expected 'row' or 'column'");
+            }
+        }
+    }
+
+    let num_pixels_lit = screen.iter().filter(|pix_lit| **pix_lit).count();
+
+    println!("Part 1 answer: {}", num_pixels_lit);
+
+    println!("Part 2 answer:");
+    print!("{}", screen_as_string(&screen, width, height));
 
 }
