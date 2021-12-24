@@ -15,7 +15,7 @@ pub fn run() {
 
             let position = digest[2] & 0xF;
             if position < 8 && part2_bytes[position as usize] == b'_' {
-                part2_bytes[position as usize] = (hex_md5sum.chars().nth(6).unwrap() as u8);
+                part2_bytes[position as usize] = hex_md5sum.chars().nth(6).unwrap() as u8;
             }
 
             println!("Found hash: {} (n = {:10}) part1: {:8} part2: {}", hex_md5sum, n, part1_password, String::from_utf8(part2_bytes.clone()).unwrap());
