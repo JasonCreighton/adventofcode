@@ -7,3 +7,9 @@ edition = "2021"
 
 [dependencies]
 md5 = "0.7.0"
+
+[dependencies.regex]
+version = "1.5.4"
+default-features = false
+# Keep dependencies/compile time/code size to a minimum
+features = ["std"]
