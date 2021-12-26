@@ -10,6 +10,7 @@ mod day9;
 mod day10;
 mod day11;
 mod day12;
+mod day13;
 
 fn main() {
     let args: Vec<String> = std::env::args().collect();
@@ -28,6 +29,7 @@ fn main() {
         10 => day10::run(),
         11 => day11::run(),
         12 => day12::run(),
+        13 => day13::run(),
         _ => println!("Day {} not implemented.", day),
     }
 }
