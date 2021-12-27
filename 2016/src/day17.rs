@@ -35,7 +35,7 @@ fn explore_paths(passcode: &[u8]) -> (Vec<u8>, usize) {
             longest_path_length = longest_path_length.max(path.len());
 
             if shortest_path == None {
-                shortest_path = Some(path.clone());
+                shortest_path = Some(path);
             }
         } else {
             // Add any successor positions to the worklist
