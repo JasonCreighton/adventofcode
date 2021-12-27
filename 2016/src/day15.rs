@@ -8,13 +8,13 @@ fn find_common_period(periods: &[(i64, i64)]) -> (i64, i64) {
     let mut common_period = 1;
     let mut common_phase = 0;
 
-    for (period, phase) in periods {
+    for &(period, phase) in periods {
         // Find some time t that satisfies both (t % period) == phase and (t % common_period) == common_phase
         let mut t = common_phase;
-        while (t % period) != *phase {
+        while (t % period) != phase {
             t += common_period;
         }
-        assert!((t % period) == *phase);
+        assert!((t % period) == phase);
         assert!((t % common_period) == common_phase);
 
         // Find common period and phase
