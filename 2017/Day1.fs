@@ -18,19 +18,19 @@ let part2 str = captchaSolution ((String.length str) / 2) str
 
 [<Fact>]
 let testExamples () =    
-    Assert.Equal(part1 "1122", 3)
-    Assert.Equal(part1 "1111", 4)
-    Assert.Equal(part1 "1234", 0)
-    Assert.Equal(part1 "91212129", 9)
-
-    Assert.Equal(part2 "1212", 6)
-    Assert.Equal(part2 "1221", 0)
-    Assert.Equal(part2 "123425", 4)
-    Assert.Equal(part2 "123123", 12)
-    Assert.Equal(part2 "12131415", 4)
+    Assert.Equal(3, part1 "1122")
+    Assert.Equal(4, part1 "1111")
+    Assert.Equal(0, part1 "1234")
+    Assert.Equal(9, part1 "91212129")
+    
+    Assert.Equal(6, part2 "1212")
+    Assert.Equal(0, part2 "1221")
+    Assert.Equal(4, part2 "123425")
+    Assert.Equal(12, part2 "123123")
+    Assert.Equal(4, part2 "12131415")
 
 [<Fact>]
 let testPuzzleInput () =
     let puzzleInput = System.IO.File.ReadAllText("../../../inputs/day1.txt").Trim()
-    Assert.Equal(part1 puzzleInput, 1393)
-    Assert.Equal(part2 puzzleInput, 1292)
+    Assert.Equal(1393, part1 puzzleInput)
+    Assert.Equal(1292, part2 puzzleInput)
