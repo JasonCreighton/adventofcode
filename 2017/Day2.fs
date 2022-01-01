@@ -27,11 +27,11 @@ let testExamples () =
         9 4 7 3\n\
         3 8 6 5\n\
     "
-    Assert.Equal(parseInput exampleInput1 |> part1, 18)
-    Assert.Equal(parseInput exampleInput2 |> part2, 9)
+    Assert.Equal(18, parseInput exampleInput1 |> part1)
+    Assert.Equal(9, parseInput exampleInput2 |> part2)
 
 [<Fact>]
 let testPuzzleInput () =
     let table = System.IO.File.ReadAllText("../../../inputs/day2.txt").Trim() |> parseInput
-    Assert.Equal(part1 table, 45351)
-    Assert.Equal(part2 table, 275)
+    Assert.Equal(45351, part1 table)
+    Assert.Equal(275, part2 table)
