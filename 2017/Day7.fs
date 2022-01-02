@@ -27,6 +27,33 @@ let parseInput (input : string) =
 
     buildProgram bottomProgram
 
+let rec balanceCorrections prog =
+    let (Program (name, weight, children)) = prog
+    let childTotalWeights, childCorrections = List.map balanceCorrections children |> List.unzip
+
+    if childTotalWeights = [] then
+        // No children, nothing to balance
+        (weight, Set.empty)
+    else
+        let allChildCorrections = List.fold Set.union Set.empty childCorrections
+
+        // Find the most common weight for children
+        let mostCommonWeight = childTotalWeights |> List.countBy id |> List.maxBy snd |> fst
+
+        // Find children that do not match
+        let childrenNeedingCorrection =
+            List.zip children childTotalWeights
+            |> List.filter (fun (prog, w) -> w <> mostCommonWeight)
+
+        // Calculate corrections needed to make children match
+        let corrections = List.map (fun (prog, w) -> (mostCommonWeight - w, prog)) childrenNeedingCorrection
+
+        let correctionWeight = List.map fst corrections |> List.sum
+
+        // Include correction in reported weight, so imbalances are only corrected for once
+        (weight + (List.sum childTotalWeights) + correctionWeight, Set.union allChildCorrections (Set.ofList corrections))
+
+
 [<Fact>]
 let testExamples () =
     let exampleInput = "\
@@ -44,11 +71,19 @@ let testExamples () =
         gyxo (61)\n\
         cntj (57)\n\
 "
-    let (Program (bottomProgram, _, _)) = parseInput exampleInput
-    Assert.Equal("tknk", bottomProgram)
+    let bottomProgram = parseInput exampleInput
+    let (Program (bottomProgramName, _, _)) = bottomProgram
+    let (correction, Program (_, uncorrectedWeight, _)) = balanceCorrections bottomProgram |> snd |> Set.toSeq |> Seq.exactlyOne
+    Assert.Equal("tknk", bottomProgramName)
+    Assert.Equal(60, uncorrectedWeight + correction)
+
+    
 
 [<Fact>]
 let testPuzzleInput () =
     let puzzleInput = System.IO.File.ReadAllText("../../../inputs/day7.txt")
-    let (Program (bottomProgram, _, _)) = parseInput puzzleInput
-    Assert.Equal("fbgguv", bottomProgram)
+    let bottomProgram = parseInput puzzleInput
+    let (Program (bottomProgramName, _, _)) = bottomProgram
+    let (correction, Program (_, uncorrectedWeight, _)) = balanceCorrections bottomProgram |> snd |> Set.toSeq |> Seq.exactlyOne
+    Assert.Equal("fbgguv", bottomProgramName)
+    Assert.Equal(1864, uncorrectedWeight + correction)
