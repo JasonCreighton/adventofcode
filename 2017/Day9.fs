@@ -3,7 +3,7 @@
 open Xunit
 
 type Item =
-    | Garbage
+    | Garbage of int
     | Group of list<Item>
 
 type ParseContext = {
@@ -22,17 +22,17 @@ let expect ctx expected =
     let ch = getc ctx
     assert (ch = expected)
 
-let rec garbageContents ctx =
+let rec garbageCount ctx acc =
     match getc ctx with
-    | '>' -> Garbage
+    | '>' -> acc
     | '!' ->
         getc ctx |> ignore
-        garbageContents ctx
-    | _ -> garbageContents ctx
+        garbageCount ctx acc
+    | _ -> garbageCount ctx (acc + 1)
     
 let rec garbage ctx =
     expect ctx '<'
-    garbageContents ctx
+    Garbage (garbageCount ctx 0)
 
 let rec item ctx =
     match peek ctx with
@@ -61,10 +61,15 @@ let parse str =
 
 let rec score depth itm =
     match itm with
-    | Garbage -> 0
+    | Garbage _ -> 0
     | Group items -> depth + List.sumBy (score (depth + 1)) items
 
 let scoreString = parse >> score 1
+
+let rec totalGarbage itm =
+    match itm with
+    | Garbage n -> n
+    | Group items -> List.sumBy totalGarbage items
 
 [<Fact>]
 let testExamples () =
@@ -80,4 +85,6 @@ let testExamples () =
 [<Fact>]
 let testPuzzleInput () =
     let puzzleInput = System.IO.File.ReadAllText("../../../inputs/day9.txt")
-    Assert.Equal(12803, scoreString puzzleInput)
+    let parsed = parse puzzleInput
+    Assert.Equal(12803, score 1 parsed)
+    Assert.Equal(6425, totalGarbage parsed)
