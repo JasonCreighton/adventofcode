@@ -7,24 +7,28 @@ let parseInput (input : string) = Regex.Split(input.Trim(), @"\r\n|\r|\n")
 
 let updateRegs (regs : Map<string, int>) (inst : string) =
     let lookup reg = Map.tryFind reg regs |> Option.defaultValue 0
-    let [|modReg; op; opArg; _; condReg; condOp; condOpArg;|] = inst.Split(' ')
-    let condFunc =
-        match condOp with
-        | "<" -> (<)
-        | "<=" -> (<=)
-        | "==" -> (=)
-        | "!=" -> (<>)
-        | ">=" -> (>=)
-        | ">" -> (>)
-    let opFunc =
-        match op with
-        | "inc" -> (+)
-        | "dec" -> (-)
+    match inst.Split(' ') with
+    | [|modReg; op; opArg; _; condReg; condOp; condOpArg;|] ->
+        let condFunc =
+            match condOp with
+            | "<" -> (<)
+            | "<=" -> (<=)
+            | "==" -> (=)
+            | "!=" -> (<>)
+            | ">=" -> (>=)
+            | ">" -> (>)
+            | _ -> failwith "unexpected operator"
+        let opFunc =
+            match op with
+            | "inc" -> (+)
+            | "dec" -> (-)
+            | _ -> failwith "unexpcetd operator"
 
-    if condFunc (lookup condReg) (int condOpArg) then
-        Map.add modReg (opFunc (lookup modReg) (int opArg)) regs
-    else
-        regs
+        if condFunc (lookup condReg) (int condOpArg) then
+            Map.add modReg (opFunc (lookup modReg) (int opArg)) regs
+        else
+            regs
+    | _ -> failwith "unexpected number of elements in instructions"
 
 let runInsts = Array.scan updateRegs (Map.add "a" 0 Map.empty) // Add dummy element so Seq.max below doesn't blow up
 let maxAtEnd = Array.last >> Map.values >> Seq.max
