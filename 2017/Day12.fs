@@ -29,6 +29,22 @@ let groupSize adjMap srcProgId =
     go srcProgId
     Set.count visited
 
+let numGroups adjMap =
+    let mutable toVisit = Map.keys adjMap |> Set.ofSeq
+    let mutable groupsFound = 0
+    let rec go progId =
+        if Set.contains progId toVisit then
+            toVisit <- Set.remove progId toVisit
+            Map.find progId adjMap |> Set.iter go
+
+    while not <| Set.isEmpty toVisit do
+        groupsFound <- groupsFound + 1
+        // Min is not important, just needs to be some arbitrary element
+        let startProgId = Set.minElement toVisit
+        go startProgId
+
+    groupsFound
+
 [<Fact>]
 let testExamples () =
     let exampleInput : string = "\
@@ -42,9 +58,11 @@ let testExamples () =
     "
     let adjMap = parsePipes exampleInput
     Assert.Equal(6, groupSize adjMap 0)
+    Assert.Equal(2, numGroups adjMap)
 
 [<Fact>]
 let testPuzzleInput () =
     let puzzleInput = System.IO.File.ReadAllText("../../../inputs/day12.txt").Trim()
     let adjMap = parsePipes puzzleInput
     Assert.Equal(288, groupSize adjMap 0)
+    Assert.Equal(211, numGroups adjMap)
