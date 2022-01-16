@@ -3,13 +3,13 @@
 open Xunit
 
 type KnotHashState = {
-    ary: int[]
-    lengths: int[]
+    ary: byte[]
+    lengths: byte[]
     mutable i: int
     mutable skipSize: int
 }
 
-let newState size lengths = { ary = Array.init size id; lengths = lengths; i = 0; skipSize = 0 }
+let newState size lengths = { ary = Array.init size byte; lengths = lengths; i = 0; skipSize = 0 }
 
 let reverseSegment ary startIndex length =
     for i = 0 to (length / 2) - 1 do
@@ -21,25 +21,29 @@ let reverseSegment ary startIndex length =
 
 let knotHashRound st =
     for length in st.lengths do
-        reverseSegment st.ary st.i length
-        st.i <- (st.i + length + st.skipSize) % Array.length st.ary
+        reverseSegment st.ary st.i (int length)
+        st.i <- (st.i + (int length) + st.skipSize) % Array.length st.ary
         st.skipSize <- st.skipSize + 1
 
-let knotHash (str : string) =
-    let st = newState 256 (Array.append (Seq.map int str |> Seq.toArray) [|17; 31; 73; 47; 23;|])
+let binaryKnotHash (str : string) =
+    let st = newState 256 (Array.append (Seq.map byte str |> Seq.toArray) [|17uy; 31uy; 73uy; 47uy; 23uy;|])
     for _ = 1 to 64 do
         knotHashRound st
 
-    // XOR groups of 16 and convert to hex string
+    // XOR groups of 16
     Array.chunkBySize 16 st.ary
-    |> Array.map (Array.fold (^^^) 0 >> sprintf "%02x")
+    |> Array.map (Array.fold (^^^) 0uy)
+
+let knotHash (str : string) =
+    binaryKnotHash str
+    |> Array.map (sprintf "%02x")
     |> String.concat ""
 
 [<Fact>]
 let testExamples () =
-    let st = newState 5 [|3; 4; 1; 5;|]
+    let st = newState 5 [|3uy; 4uy; 1uy; 5uy;|]
     knotHashRound st
-    Assert.Equal<int>([|3; 4; 2; 1; 0;|], st.ary)
+    Assert.Equal<byte>([|3uy; 4uy; 2uy; 1uy; 0uy;|], st.ary)
 
     Assert.Equal("a2582a3a0e66e6e86e3812dcb672a272", knotHash "")
     Assert.Equal("33efeb34ea91902bb2f59c9920caa6cd", knotHash "AoC 2017")
@@ -49,8 +53,8 @@ let testExamples () =
 [<Fact>]
 let testPuzzleInput () =
     let puzzleInput = System.IO.File.ReadAllText("../../../inputs/day10.txt").Trim()
-    let lengths = puzzleInput.Split(',') |> Array.map int
+    let lengths = puzzleInput.Split(',') |> Array.map byte
     let st = newState 256 lengths
     knotHashRound st
-    Assert.Equal(23874, st.ary[0] * st.ary[1])
+    Assert.Equal(23874, (int st.ary[0]) * (int st.ary[1]))
     Assert.Equal("e1a65bfb5a5ce396025fab5528c25a87", knotHash puzzleInput)
