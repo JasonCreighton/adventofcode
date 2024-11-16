@@ -16,6 +16,8 @@ let captchaSolution dist str =
 let part1 str = captchaSolution 1 str
 let part2 str = captchaSolution ((String.length str) / 2) str
 
+let run puzzleInput = (part1 puzzleInput, part2 puzzleInput)
+
 [<Fact>]
 let testExamples () =    
     Assert.Equal(3, part1 "1122")
@@ -30,7 +32,4 @@ let testExamples () =
     Assert.Equal(4, part2 "12131415")
 
 [<Fact>]
-let testPuzzleInput () =
-    let puzzleInput = System.IO.File.ReadAllText("../../../inputs/day1.txt").Trim()
-    Assert.Equal(1393, part1 puzzleInput)
-    Assert.Equal(1292, part2 puzzleInput)
+let testPuzzleInput () = Util.testDay 1 run

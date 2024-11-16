@@ -39,6 +39,12 @@ let knotHash (str : string) =
     |> Array.map (sprintf "%02x")
     |> String.concat ""
 
+let run (puzzleInput : string) =
+    let lengths = puzzleInput.Split(',') |> Array.map byte
+    let st = newState 256 lengths
+    knotHashRound st
+    ((int st.ary[0]) * (int st.ary[1]), knotHash puzzleInput)
+
 [<Fact>]
 let testExamples () =
     let st = newState 5 [|3uy; 4uy; 1uy; 5uy;|]
@@ -51,10 +57,4 @@ let testExamples () =
     Assert.Equal("63960835bcdc130f0b66d7ff4f6a5a8e", knotHash "1,2,4")
 
 [<Fact>]
-let testPuzzleInput () =
-    let puzzleInput = System.IO.File.ReadAllText("../../../inputs/day10.txt").Trim()
-    let lengths = puzzleInput.Split(',') |> Array.map byte
-    let st = newState 256 lengths
-    knotHashRound st
-    Assert.Equal(23874, (int st.ary[0]) * (int st.ary[1]))
-    Assert.Equal("e1a65bfb5a5ce396025fab5528c25a87", knotHash puzzleInput)
+let testPuzzleInput () = Util.testDay 10 run

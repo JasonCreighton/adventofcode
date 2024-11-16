@@ -31,6 +31,9 @@ let maxStepsBack (dirs : string) =
     |> Array.map (minSteps (0, 0))
     |> Array.max
 
+let run puzzleInput =
+    (numStepsBack puzzleInput, maxStepsBack puzzleInput)
+
 [<Fact>]
 let testExamples () =
     Assert.Equal(3, numStepsBack "ne,ne,ne")
@@ -39,7 +42,4 @@ let testExamples () =
     Assert.Equal(3, numStepsBack "se,sw,se,sw,sw")
 
 [<Fact>]
-let testPuzzleInput () =
-    let puzzleInput = System.IO.File.ReadAllText("../../../inputs/day11.txt").Trim()
-    Assert.Equal(715, numStepsBack puzzleInput)
-    Assert.Equal(1512, maxStepsBack puzzleInput)
+let testPuzzleInput () = Util.testDay 11 run

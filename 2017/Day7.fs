@@ -53,7 +53,12 @@ let rec balanceCorrections prog =
         // Include correction in reported weight, so imbalances are only corrected for once
         (weight + (List.sum childTotalWeights) + correctionWeight, Set.union allChildCorrections (Set.ofList corrections))
 
-
+let run puzzleInput =
+    let bottomProgram = parseInput puzzleInput
+    let (Program (bottomProgramName, _, _)) = bottomProgram
+    let (correction, Program (_, uncorrectedWeight, _)) = balanceCorrections bottomProgram |> snd |> Set.toSeq |> Seq.exactlyOne
+    (bottomProgramName, uncorrectedWeight + correction)
+    
 [<Fact>]
 let testExamples () =
     let exampleInput = "\
@@ -77,13 +82,5 @@ let testExamples () =
     Assert.Equal("tknk", bottomProgramName)
     Assert.Equal(60, uncorrectedWeight + correction)
 
-    
-
 [<Fact>]
-let testPuzzleInput () =
-    let puzzleInput = System.IO.File.ReadAllText("../../../inputs/day7.txt")
-    let bottomProgram = parseInput puzzleInput
-    let (Program (bottomProgramName, _, _)) = bottomProgram
-    let (correction, Program (_, uncorrectedWeight, _)) = balanceCorrections bottomProgram |> snd |> Set.toSeq |> Seq.exactlyOne
-    Assert.Equal("fbgguv", bottomProgramName)
-    Assert.Equal(1864, uncorrectedWeight + correction)
+let testPuzzleInput () = Util.testDay 7 run

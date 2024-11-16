@@ -50,6 +50,14 @@ let numberAfterZero (steps : int) (n : int) : int =
 let valueAfter (buf : int array) (value : int) =
     buf[((Array.findIndex (fun x -> x = value) buf) + 1) % Array.length buf]
 
+let run (puzzleInput : string) =
+    let parsed = int puzzleInput
+    let puzzleResult = buffer parsed 2017
+    let part1Answer = valueAfter puzzleResult 2017
+    let part2Answer = numberAfterZero parsed 50_000_000
+    
+    (part1Answer, part2Answer)
+
 [<Fact>]
 let testNumberAfterZero () =
     let steps = 3
@@ -73,10 +81,4 @@ let testExamples () =
     Assert.Equal<int>([|0; 9; 5; 7; 2; 4; 3; 8; 6; 1|], buffer 3 9)
 
 [<Fact>]
-let testPuzzleInput () =
-    let puzzleInput = 369
-    let puzzleResult = buffer puzzleInput 2017
-    Assert.Equal(1547, valueAfter puzzleResult 2017)
-
-    let part2Answer = numberAfterZero puzzleInput 50_000_000
-    Assert.Equal(31154878, part2Answer)
+let testPuzzleInput () = Util.testDay 17 run
