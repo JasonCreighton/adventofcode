@@ -71,6 +71,10 @@ let rec totalGarbage itm =
     | Garbage n -> n
     | Group items -> List.sumBy totalGarbage items
 
+let run puzzleInput =
+    let parsed = parse puzzleInput
+    (score 1 parsed, totalGarbage parsed)
+
 [<Fact>]
 let testExamples () =
     Assert.Equal(1, scoreString "{}")
@@ -83,8 +87,4 @@ let testExamples () =
     Assert.Equal(3, scoreString "{{<a!>},{<a!>},{<a!>},{<ab>}}")
 
 [<Fact>]
-let testPuzzleInput () =
-    let puzzleInput = System.IO.File.ReadAllText("../../../inputs/day9.txt")
-    let parsed = parse puzzleInput
-    Assert.Equal(12803, score 1 parsed)
-    Assert.Equal(6425, totalGarbage parsed)
+let testPuzzleInput () = Util.testDay 9 run

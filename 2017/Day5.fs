@@ -15,6 +15,10 @@ let stepsToExit part2 jumpOffsets =
 let part1 = stepsToExit false
 let part2 = stepsToExit true
 
+let run puzzleInput =
+    let parsed = Util.splitIntoLines puzzleInput |> Array.map int
+    (part1 <| Array.copy parsed, part2 <| Array.copy parsed)
+
 [<Fact>]
 let testExamples () =
     let exampleInput = [|0; 3; 0; 1; -3;|]
@@ -29,8 +33,4 @@ let testExamples () =
 
     
 [<Fact>]
-let testPuzzleInput () =
-    let puzzleInput = System.IO.File.ReadLines("../../../inputs/day5.txt") |> Seq.map int |> Seq.toArray
-    Assert.Equal(381680, Array.copy puzzleInput |> part1)
-    Assert.Equal(29717847, Array.copy puzzleInput |> part2)
-
+let testPuzzleInput () = Util.testDay 5 run

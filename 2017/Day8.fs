@@ -34,6 +34,10 @@ let runInsts = Array.scan updateRegs (Map.add "a" 0 Map.empty) // Add dummy elem
 let maxAtEnd = Array.last >> Map.values >> Seq.max
 let maxDuring = (Array.map (Map.values >> Seq.max)) >> Array.max
 
+let run puzzleInput =
+    let results = parseInput puzzleInput |> runInsts
+    (maxAtEnd results, maxDuring results)
+
 [<Fact>]
 let testExamples () =
     let exampleInput : string = "\
@@ -48,8 +52,4 @@ let testExamples () =
     Assert.Equal(10, maxDuring results)
 
 [<Fact>]
-let testPuzzleInput () =
-    let puzzleInput = System.IO.File.ReadAllText("../../../inputs/day8.txt")
-    let results = parseInput puzzleInput |> runInsts
-    Assert.Equal(6012, maxAtEnd results)
-    Assert.Equal(6369, maxDuring results)
+let testPuzzleInput () = Util.testDay 8 run

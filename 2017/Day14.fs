@@ -42,6 +42,9 @@ let regionsPresent (seed : string) : int =
 
     numRegions
 
+let run puzzleInput =
+    (squaresUsed puzzleInput, regionsPresent puzzleInput)
+
 [<Fact>]
 let testExamples () =
     let exampleInput = "flqrgnkx"
@@ -49,7 +52,4 @@ let testExamples () =
     Assert.Equal(1242, regionsPresent exampleInput)
 
 [<Fact>]
-let testPuzzleInput () =
-    let puzzleInput = "jzgqcdpd"
-    Assert.Equal(8074, squaresUsed puzzleInput)
-    Assert.Equal(1212, regionsPresent puzzleInput)
+let testPuzzleInput () = Util.testDay 14 run

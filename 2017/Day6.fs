@@ -27,14 +27,14 @@ let numSteps initial =
 
     (seen.Count, seen.Count - (Map.find (Array.toList ary) seen))
 
+let run (puzzleInput : string)=
+    let initial = puzzleInput.Split(" ", System.StringSplitOptions.RemoveEmptyEntries) |> Array.map int
+    numSteps initial
+
 [<Fact>]
 let testExamples () =
     let initial = [|0; 2; 7; 0;|]
     Assert.Equal((5, 4), numSteps initial)
 
 [<Fact>]
-let testPuzzleInput () =
-    let initial = Array.copy puzzleInput
-    let part1Answer, part2Answer = numSteps initial
-    Assert.Equal(12841, part1Answer)
-    Assert.Equal(8038, part2Answer)
+let testPuzzleInput () = Util.testDay 6 run

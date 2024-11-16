@@ -45,6 +45,10 @@ let numGroups adjMap =
 
     groupsFound
 
+let run puzzleInput =
+    let adjMap = parsePipes puzzleInput
+    (groupSize adjMap 0, numGroups adjMap)
+
 [<Fact>]
 let testExamples () =
     let exampleInput : string = "\
@@ -61,8 +65,4 @@ let testExamples () =
     Assert.Equal(2, numGroups adjMap)
 
 [<Fact>]
-let testPuzzleInput () =
-    let puzzleInput = System.IO.File.ReadAllText("../../../inputs/day12.txt").Trim()
-    let adjMap = parsePipes puzzleInput
-    Assert.Equal(288, groupSize adjMap 0)
-    Assert.Equal(211, numGroups adjMap)
+let testPuzzleInput () = Util.testDay 12 run

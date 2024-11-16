@@ -33,6 +33,12 @@ let part1 n =
     let x, y = Seq.item (n - 1) coords
     abs x + abs y
 
+let part2 n = Seq.find (fun x -> x > n) sumsOfNeighboors
+
+let run puzzleInput =
+    let input = int puzzleInput
+    (part1 input, part2 input)
+
 [<Fact>]
 let testExamples () =
     Assert.Equal(0, part1 1)
@@ -45,9 +51,4 @@ let testExamples () =
     Assert.Equal<int>(expectedSumsOfNeighbors, calcSumsOfNeighbors)
 
 [<Fact>]
-let testPuzzleInput () =
-    let puzzleInput = 312051
-    Assert.Equal(430, part1 puzzleInput)
-
-    let part2Answer = Seq.find (fun n -> n > puzzleInput) sumsOfNeighboors
-    Assert.Equal(312453, part2Answer)
+let testPuzzleInput () = Util.testDay 3 run

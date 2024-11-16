@@ -3,7 +3,7 @@
 open Xunit
 
 let parseInput (str : string) =
-    str.Split(System.Environment.NewLine.ToCharArray(), System.StringSplitOptions.RemoveEmptyEntries)
+    Util.splitIntoLines str
     |> Array.map (fun s -> Array.map int (s.Split(' ', '\t')))
 
 let part1 = Array.sumBy (fun row -> (Array.max row) - (Array.min row))
@@ -14,6 +14,10 @@ let part2 (ary : int[][]) =
         |> Array.exactlyOne
         |> (fun (a, b) -> a / b)
     ) ary
+
+let run puzzleInput =
+    let table = parseInput puzzleInput
+    (part1 table, part2 table)
 
 [<Fact>]
 let testExamples () =
@@ -31,7 +35,4 @@ let testExamples () =
     Assert.Equal(9, parseInput exampleInput2 |> part2)
 
 [<Fact>]
-let testPuzzleInput () =
-    let table = System.IO.File.ReadAllText("../../../inputs/day2.txt").Trim() |> parseInput
-    Assert.Equal(45351, part1 table)
-    Assert.Equal(275, part2 table)
+let testPuzzleInput () = Util.testDay 2 run

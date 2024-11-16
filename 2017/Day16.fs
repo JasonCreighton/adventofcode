@@ -48,6 +48,15 @@ let part2 commands initial =
     let cycle = findCycle commands initial
     cycle[1000000000 % Array.length cycle]
 
+let run (puzzleInput : string) =
+    let commands = puzzleInput.Split(",") |> Array.map parseCommand
+    let initial = [|'a' .. 'p'|];    
+    let final = Array.fold (|>) initial commands
+    let part1Answer = System.String final
+    let part2Answer = part2 commands initial |> System.String
+
+    (part1Answer, part2Answer)
+
 [<Fact>]
 let testExamples () =
     let state0 = [|'a' .. 'e'|]
@@ -62,13 +71,4 @@ let testExamples () =
     Assert.Equal<char>([|'b'; 'a'; 'e'; 'd'; 'c'|], state3)
 
 [<Fact>]
-let testPuzzleInput () =
-    let puzzleInput = System.IO.File.ReadAllText("../../../inputs/day16.txt").Trim()
-    let commands = puzzleInput.Split(",") |> Array.map parseCommand
-    let initial = [|'a' .. 'p'|];    
-    let final = Array.fold (|>) initial commands
-    let part1_answer = System.String final
-    Assert.Equal("kpbodeajhlicngmf", part1_answer)
-
-    let part2_answer = part2 commands initial |> System.String
-    Assert.Equal("ahgpjdkcbfmneloi", part2_answer)
+let testPuzzleInput () = Util.testDay 16 run

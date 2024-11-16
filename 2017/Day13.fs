@@ -36,6 +36,10 @@ let parseInput (str : string) =
     let lines = str.Split(System.Environment.NewLine.ToCharArray(), System.StringSplitOptions.RemoveEmptyEntries)
     Array.map (fun (line : string) -> let parts = line.Split(": ") in (int parts[0], int parts[1])) lines
 
+let run puzzleInput =
+    let ranges = parseInput puzzleInput
+    (totalSeverity 0 ranges, smallestSafeDelay ranges)
+
 [<Fact>]
 let testExamples () =
     let exampleInput = """
@@ -56,8 +60,4 @@ let testExamples () =
     Assert.Equal(10, smallestSafeDelay ranges)
 
 [<Fact>]
-let testPuzzleInput () =
-    let puzzleInput = System.IO.File.ReadAllText("../../../inputs/day13.txt")
-    let ranges = parseInput puzzleInput
-    Assert.Equal(1840, totalSeverity 0 ranges)
-    Assert.Equal(3850260, smallestSafeDelay ranges)
+let testPuzzleInput () = Util.testDay 13 run

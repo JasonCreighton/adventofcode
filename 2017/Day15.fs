@@ -27,12 +27,14 @@ let part2 seedA seedB =
     |> Seq.take 5_000_000
     |> countMatches
 
+let run puzzleInput =
+    let seeds = Util.splitIntoLines puzzleInput |> Array.map (fun line -> line.Split(" ")[4] |> uint32)
+    (part1 seeds[0] seeds[1], part2 seeds[0] seeds[1])
+
 [<Fact>]
 let testExamples () =
     Assert.Equal(588, part1 65ul 8921ul)
     Assert.Equal(309, part2 65ul 8921ul)
 
 [<Fact>]
-let testPuzzleInput () =
-    Assert.Equal(573, part1 634ul 301ul)
-    Assert.Equal(294, part2 634ul 301ul)
+let testPuzzleInput () = Util.testDay 15 run
