@@ -21,6 +21,7 @@ let runByNumber n =
     | 17 -> Util.testDay n Day17.run
     | 18 -> Util.testDay n Day18.run
     | 19 -> Util.testDay n Day19.run
+    | 20 -> Util.testDay n Day20.run
     | _ -> failwith "Invalid day"
 
 let [<EntryPoint>] main _ =
