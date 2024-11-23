@@ -6,7 +6,7 @@ let splitIntoLines (s : string) =
     s.Split(System.Environment.NewLine.ToCharArray(), System.StringSplitOptions.RemoveEmptyEntries)
 
 let testDay dayNumber runFunc =
-    let puzzleInput = System.IO.File.ReadAllText($"../../../data/input{dayNumber}.txt").Trim()
+    let puzzleInput = System.IO.File.ReadAllText($"../../../data/input{dayNumber}.txt")
     let (part1Answer, part2Answer) = runFunc puzzleInput
     let (p1String, p2String) = part1Answer |> string, part2Answer |> string
 
