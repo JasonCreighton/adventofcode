@@ -28,7 +28,7 @@ let [<EntryPoint>] main _ =
     // Print out results. The actual development is done using xUnit, this is mainly
     // to have something we can run the profiler on.
     let numRuns = 3
-    let numDays = 19
+    let numDays = 20
 
     for run = 1 to numRuns do
         let runTimer = System.Diagnostics.Stopwatch.StartNew()
