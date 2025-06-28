@@ -22,13 +22,18 @@ let runByNumber n =
     | 18 -> Util.testDay n Day18.run
     | 19 -> Util.testDay n Day19.run
     | 20 -> Util.testDay n Day20.run
+    | 21 -> ("TODO", "TODO")
+    | 22 -> ("TODO", "TODO")
+    | 23 -> Util.testDay n Day23.run
+    | 24 -> ("TODO", "TODO")
+    | 25 -> ("TODO", "TODO")
     | _ -> failwith "Invalid day"
 
 let [<EntryPoint>] main _ =
     // Print out results. The actual development is done using xUnit, this is mainly
     // to have something we can run the profiler on.
     let numRuns = 3
-    let numDays = 20
+    let numDays = 25
 
     for run = 1 to numRuns do
         let runTimer = System.Diagnostics.Stopwatch.StartNew()
