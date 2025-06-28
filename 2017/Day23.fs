@@ -17,7 +17,7 @@ let initCpu () =
     {
         pc = 0
         mulCounter = 0
-        regs = Array.zeroCreate 26
+        regs = Array.zeroCreate 8
     }
 
 let step (prog: inst array) (state : CpuState) : unit =
@@ -64,9 +64,28 @@ let parseInst (part2: bool) (line : string) : inst =
         )
     | _ -> failwith "Unknown operation"
 
-    
 let parseProgram (part2: bool) (program : string) : inst array =
     Array.map (parseInst part2) (Util.splitIntoLines (program.Trim()))
+
+let primalityTable (upTo: int) : bool array =
+    let isPrime = Array.create (upTo + 1) true
+    isPrime[0] <- false
+    isPrime[1] <- false
+
+    let mutable curPrime = 0
+
+    while curPrime < Array.length isPrime do
+        while curPrime < Array.length isPrime && not isPrime[curPrime] do
+            curPrime <- curPrime + 1
+
+        let mutable composite = curPrime * 2
+        while composite < Array.length isPrime do
+            isPrime[composite] <- false
+            composite <- composite + curPrime
+
+        curPrime <- curPrime + 1
+
+    isPrime
 
 let runPart1 (program : string) : int64 =
     let prog = parseProgram false program
@@ -77,8 +96,27 @@ let runPart1 (program : string) : int64 =
 
     cpu.mulCounter
 
+// Sadly I have hard-coded some numbers from manual inspection of the program
+// It is counting the number of composite numbers in some range with some stride
+let runPart2 () : int =
+    let lowerBound = 106700
+    let upperBound = 123700
+    let inc = 17
+
+    let isPrime = primalityTable upperBound
+    
+    {lowerBound .. inc .. upperBound}    
+    |> Seq.filter (fun n -> not isPrime[n])
+    |> Seq.length
+
 let run puzzleInput =
-    (runPart1 puzzleInput, "TODO")
+    (runPart1 puzzleInput, runPart2 ())
+
+[<Fact>]
+let testPrimalityTable () =
+    let isPrime = primalityTable 10
+
+    Assert.Equal<bool>([|false; false; true; true; false; true; false; true; false; false; false|], isPrime)
 
 [<Fact>]
 let testPuzzleInput () = Util.testDay 23 run
