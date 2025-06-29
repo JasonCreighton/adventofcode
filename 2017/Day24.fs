@@ -72,17 +72,34 @@ Eyeballing the graph, I feel like I can probably brute force it, and also I don'
 
 *)
 
-let rec strongestBridge (startFrom : int) (components : (int * int) array) : int =
+type Bridge = {
+    length : int
+    strength : int
+}
+
+let part1Criterion b = (b.strength, 0)
+let part2Criterion b = (b.length, b.strength)
+
+let rec bestBridge (criterion : Bridge -> (int * int)) (startFrom : int) (components : (int * int) array) : Bridge =
     let compat = Array.filter (fun (l, r) -> l = startFrom || r = startFrom) components
     if Array.length compat = 0 then
-        0 // Base case: No options left to choose
+        // Base case: No options left to choose
+        { length = 0; strength = 0}
     else
         // Recursive case: The max of all possible options
-        Array.max <| Array.map (fun (l, r) ->
+        Array.maxBy criterion <| Array.map (fun (l, r) ->
             let componentsWithoutSelected = Array.filter (fun c -> c <> (l, r)) components
             let newStartFrom = if l = startFrom then r else l
-            (l + r) + strongestBridge newStartFrom componentsWithoutSelected
+            let best = bestBridge criterion newStartFrom componentsWithoutSelected
+            {
+                length = 1 + best.length
+                strength = (l + r) + best.strength
+            }
         ) compat
+
+let bridgeStrength criterion startFrom components =
+    let b = bestBridge criterion startFrom components
+    b.strength
 
 let parseComponent (line : string) : (int * int) =
     let c = line.Split("/") |> Array.map int
@@ -93,7 +110,7 @@ let parseComponents (puzzleInput : string) =
 
 let run puzzleInput =
     let parsed = parseComponents puzzleInput
-    (strongestBridge 0 parsed, "TODO")
+    (bridgeStrength part1Criterion 0 parsed, bridgeStrength part2Criterion 0 parsed)
 
 [<Fact>]
 let testExamples () =
@@ -108,9 +125,13 @@ let testExamples () =
 9/10
 """
     
-    let strength = strongestBridge 0 (parseComponents example1)
+    let strongest = bridgeStrength part1Criterion 0 (parseComponents example1)
 
-    Assert.Equal(31, strength)
+    Assert.Equal(31, strongest)
+
+    let strengthOfLongest = bridgeStrength part2Criterion 0 (parseComponents example1)
+
+    Assert.Equal(19, strengthOfLongest)
 
 [<Fact>]
 let testPuzzleInput () = Util.testDay 24 run
