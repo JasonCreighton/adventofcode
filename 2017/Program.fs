@@ -25,7 +25,7 @@ let runByNumber n =
     | 21 -> ("TODO", "TODO")
     | 22 -> ("TODO", "TODO")
     | 23 -> Util.testDay n Day23.run
-    | 24 -> ("TODO", "TODO")
+    | 24 -> Util.testDay n Day24.run
     | 25 -> ("TODO", "TODO")
     | _ -> failwith "Invalid day"
 
