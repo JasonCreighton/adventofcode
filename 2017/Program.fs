@@ -26,7 +26,7 @@ let runByNumber n =
     | 22 -> ("TODO", "TODO")
     | 23 -> Util.testDay n Day23.run
     | 24 -> Util.testDay n Day24.run
-    | 25 -> ("TODO", "TODO")
+    | 25 -> Util.testDay n Day25.run
     | _ -> failwith "Invalid day"
 
 let [<EntryPoint>] main _ =
