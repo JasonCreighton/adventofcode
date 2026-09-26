@@ -22,8 +22,8 @@ let runByNumber n =
     | 18 -> Util.testDay n Day18.run
     | 19 -> Util.testDay n Day19.run
     | 20 -> Util.testDay n Day20.run
-    | 21 -> ("TODO", "TODO")
-    | 22 -> ("TODO", "TODO")
+    | 21 -> Util.testDay n Day21.run
+    | 22 -> Util.testDay n Day22.run
     | 23 -> Util.testDay n Day23.run
     | 24 -> Util.testDay n Day24.run
     | 25 -> Util.testDay n Day25.run
