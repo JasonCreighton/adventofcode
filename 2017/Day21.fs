@@ -1,6 +1,7 @@
 ﻿module Day21
 
 open Xunit
+open System.Collections.Generic
 
 let flip pat =
     Array2D.init (Array2D.length1 pat) (Array2D.length2 pat) (fun y x ->
@@ -21,6 +22,15 @@ let allFlipsAndRotations pat =
     let flippedRotations = Array.map flip rotations
     Array.concat [|rotations; flippedRotations|]
 
+// Alternate dictionary key to use for 2D array of bools for lookup efficiency
+let ruleKey ary =
+    let len = Array2D.length1 ary
+    let mutable key = len
+    for x = 0 to len-1 do
+        for y = 0 to len-1 do
+            key <- (key <<< 1) ||| (if ary[x,y] then 1 else 0)
+    key
+
 let flatToGrouped groupSize flat =
     let numGroups = Array2D.length1 flat / groupSize
     Array2D.init numGroups numGroups (fun gy gx ->
@@ -38,10 +48,10 @@ let groupedToFlat (grouped: 'a array2d array2d) =
         grp[y % groupSize, x % groupSize]
     )
 
-let step rules flat =
+let step (rules : IReadOnlyDictionary<int, bool array2d>) flat =
     let groupSize = if ((Array2D.length1 flat) % 2) = 0 then 2 else 3
     flatToGrouped groupSize flat
-    |> Array2D.map (fun grp -> Map.find grp rules)
+    |> Array2D.map (fun grp -> rules[ruleKey grp])
     |> groupedToFlat
 
 let stepSeq flat rules =
@@ -78,13 +88,13 @@ let parseRule (line : string) =
     let ary = line.Split(" => ")
     let lhs = parsePattern ary[0]
     let rhs = parsePattern ary[1]
-    Array.map (fun p -> (p, rhs)) (allFlipsAndRotations lhs)
+    Array.map (fun p -> (ruleKey p, rhs)) (allFlipsAndRotations lhs)
 
 let parseRules (puzzleInput : string) =
     Util.splitIntoLines puzzleInput
     |> Array.map parseRule
     |> Array.concat
-    |> Map.ofArray
+    |> readOnlyDict
 
 let run puzzleInput =
     let rules = parseRules puzzleInput

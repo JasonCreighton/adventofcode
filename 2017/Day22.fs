@@ -9,11 +9,28 @@ type Cell =
     | Flagged
 
 type State = {
-    nodes : Map<(int * int), Cell>
-    loc : int * int
-    dir : int * int
-    numInfectingBursts: int
+    nodes : Cell array2d
+    mutable loc : int * int
+    mutable dir : int * int
+    mutable numInfectingBursts: int
 }
+
+let initState map =
+    // Assume odd-length, sqaure map. The largest 0-based index will be even, and we can just divide by 2 to find the middle
+    let biggestIndex = Map.maxKeyValue map |> fst |> fst
+    let middle = biggestIndex / 2
+
+    // Use a 1000x1000 array to store the cells, which is big enough for my input
+    let aryLen = 1000
+    let offset = aryLen / 2
+    let ary = Array2D.create aryLen aryLen Clean
+    Map.iter (fun (x, y) cell -> ary[offset + x, offset + y] <- cell) map
+    {
+        nodes = ary
+        loc = (offset + middle, offset + middle)
+        dir = (0, -1)
+        numInfectingBursts = 0
+    }
 
 let nextDir curCell (dx, dy) =
     match curCell with
@@ -36,30 +53,21 @@ let part2 curCell =
     | Flagged  -> Clean
 
 let step nextCell st =
-    let curCell = Map.tryFind st.loc st.nodes |> Option.defaultValue Clean
+    let (x, y) = st.loc
+    let curCell = st.nodes[x, y]
     let newCell = nextCell curCell
     let newDir = nextDir curCell st.dir
-    {
-        nodes = Map.add st.loc newCell st.nodes
-        loc = (fst st.loc + fst newDir, snd st.loc + snd newDir)
-        dir = newDir
-        numInfectingBursts = st.numInfectingBursts + (if newCell = Infected then 1 else 0)
-    }
+    let (dx, dy) = newDir
+    st.nodes[x, y] <- newCell
+    st.loc <- (x + dx, y + dy)
+    st.dir <- newDir
+    st.numInfectingBursts <- st.numInfectingBursts + (if newCell = Infected then 1 else 0)
 
-let stepSeq nextCell st = Seq.unfold (fun st -> Some(st, step nextCell st)) st
-
-let stepN n nextCell st = Seq.item n (stepSeq nextCell st)
-
-let initState map =
-    // Assume odd-length, sqaure map. The largest 0-based index will be even, and we can just divide by 2 to find the middle
-    let biggestIndex = Map.maxKeyValue map |> fst |> fst    
-    let middle = biggestIndex / 2
-    {
-        nodes = map
-        loc = (middle, middle)
-        dir = (0, -1)
-        numInfectingBursts = 0
-    }
+let stepN n nextCell map =
+    let st = initState map
+    for i in 1..n do
+        step nextCell st
+    st
 
 let parseMap puzzleInput =
     Util.splitIntoLines puzzleInput
@@ -71,8 +79,8 @@ let parseMap puzzleInput =
     |> Map.ofArray
 
 let run puzzleInput =
-    let state = parseMap puzzleInput |> initState
-    ((stepN 10000 part1 state).numInfectingBursts, (stepN 10000000 part2 state).numInfectingBursts)
+    let map = parseMap puzzleInput
+    ((stepN 10000 part1 map).numInfectingBursts, (stepN 10000000 part2 map).numInfectingBursts)
 
 [<Fact>]
 let testExamples () =
@@ -82,12 +90,11 @@ let testExamples () =
 ...
 """
     let exampleMap = parseMap example1
-    let exampleState = initState exampleMap
 
-    Assert.Equal(5, (stepN 7 part1 exampleState).numInfectingBursts)
-    Assert.Equal(5587, (stepN 10000 part1 exampleState).numInfectingBursts)
-    Assert.Equal(26, (stepN 100 part2 exampleState).numInfectingBursts)
-    Assert.Equal(2511944, (stepN 10000000 part2 exampleState).numInfectingBursts)
+    Assert.Equal(5, (stepN 7 part1 exampleMap).numInfectingBursts)
+    Assert.Equal(5587, (stepN 10000 part1 exampleMap).numInfectingBursts)
+    Assert.Equal(26, (stepN 100 part2 exampleMap).numInfectingBursts)
+    Assert.Equal(2511944, (stepN 10000000 part2 exampleMap).numInfectingBursts)
 
 [<Fact>]
 let testPuzzleInput () = Util.testDay 22 run
