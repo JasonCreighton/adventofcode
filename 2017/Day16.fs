@@ -24,11 +24,14 @@ let parseCommand (cmd : string) : (array<char> -> array<char>) =
     match cmd[0] with
     | 's' -> spin (int cmd[1..])
     | 'x' ->
-        let [|a; b|] = Array.map int (cmd[1..].Split("/"))
-        exchange a b
+        match Array.map int (cmd[1..].Split("/")) with
+        | [|a; b|] -> exchange a b
+        | _ -> failwith "Unexpected command"
     | 'p' ->
-        let [|dancerA; dancerB|] = Array.map (fun (s : string) -> s[0]) (cmd[1..].Split("/"))
-        partner dancerA dancerB
+        match Array.map (fun (s : string) -> s[0]) (cmd[1..].Split("/")) with
+        | [|dancerA; dancerB|] -> partner dancerA dancerB
+        | _ -> failwith "Unexpected command"
+    | _ -> failwith "Unexpected command"
 
 let dance (commands : array<array<char> -> array<char>>) (state : array<char>) : array<char> =
     Array.fold (|>) state commands
