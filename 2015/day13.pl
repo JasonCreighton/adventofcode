@@ -8,7 +8,7 @@ read_file(File, Str) :-
 
 load_facts :-
     retractall(happiness(_, _, _)),
-    read_file("inputs/day13.txt", Str),
+    read_file("../../adventofcode-data/2015/inputs/day13.txt", Str),
     split_string(Str, "\n", ".", Lines),
     member(Line, Lines),
     string_lower(Line, LowerLine),

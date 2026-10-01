@@ -88,7 +88,7 @@ rotate based on position of letter d
 }
 
 pub fn run() {
-    let puzzle_input = std::fs::read_to_string("inputs/day21.txt").unwrap();
+    let puzzle_input = std::fs::read_to_string("../../adventofcode-data/2016/inputs/day21.txt").unwrap();
     let mut password = b"abcdefgh".to_vec();
 
     run_instructions(&puzzle_input, &mut password, false);

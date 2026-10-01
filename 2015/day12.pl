@@ -2,7 +2,7 @@
 
 puzzle_input(Json) :-
     setup_call_cleanup(
-        open("inputs/day12.json", read, In),
+        open("../../adventofcode-data/2015/inputs/day12.json", read, In),
         json_read_dict(In, Json),
         close(In)).
 

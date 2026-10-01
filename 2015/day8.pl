@@ -5,7 +5,7 @@ read_file(File, Str) :-
         close(In)).
 
 puzzle_input(CharLists) :-
-    read_file("inputs/day8.txt", Str),
+    read_file("../../adventofcode-data/2015/inputs/day8.txt", Str),
     split_string(Str, "\n", "", Lines),
     maplist(string_chars, Lines, CharLists).
 

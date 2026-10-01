@@ -7,7 +7,7 @@ stream_lines(In, Lines) :-
     read_string(In, _, Str),
     split_string(Str, "\n", "", Lines).
 
-puzzle_input(Lines) :- file_lines("inputs/day5.txt", Lines).
+puzzle_input(Lines) :- file_lines("../../adventofcode-data/2015/inputs/day5.txt", Lines).
 
 vowel(a).
 vowel(e).

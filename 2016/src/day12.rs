@@ -98,7 +98,7 @@ dec a
 }
 
 pub fn run() {
-    let puzzle_input = std::fs::read_to_string("inputs/day12.txt").unwrap();
+    let puzzle_input = std::fs::read_to_string("../../adventofcode-data/2016/inputs/day12.txt").unwrap();
     let insts = parse_instructions(&puzzle_input);
 
     let mut part1_registers = [0i64; NUM_REGISTERS];

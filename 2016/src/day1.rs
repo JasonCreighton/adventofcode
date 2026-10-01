@@ -48,7 +48,7 @@ fn manhattan_distance(pos: (i32, i32)) -> i32 {
 }
 
 pub fn run() {
-    let puzzle_input = std::fs::read_to_string("inputs/day1.txt").unwrap();
+    let puzzle_input = std::fs::read_to_string("../../adventofcode-data/2016/inputs/day1.txt").unwrap();
     let commands = puzzle_input.split(',').map(|s| s.trim()).collect::<Vec<_>>();
     let positions = commands_to_positions(commands.as_slice());
 

@@ -63,7 +63,7 @@ fn test_example() {
 }
 
 pub fn run() {
-    let blocklist = parse_input(&std::fs::read_to_string("inputs/day20.txt").unwrap());
+    let blocklist = parse_input(&std::fs::read_to_string("../../adventofcode-data/2016/inputs/day20.txt").unwrap());
     println!("Part 1 answer: {}", lowest_allowed(&blocklist));
     println!("Part 2 answer: {}", (1 << 32) - total_blocked(&blocklist));
     // println!("Part 2 answer: {} (brute force)", total_allowed_brute_force(&blocklist));

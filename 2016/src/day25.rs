@@ -108,7 +108,7 @@ fn generates_clock(insts: &[Inst], registers: &mut [i64; NUM_REGISTERS]) -> bool
 }
 
 pub fn run() {
-    let puzzle_input = std::fs::read_to_string("inputs/day25.txt").unwrap();
+    let puzzle_input = std::fs::read_to_string("../../adventofcode-data/2016/inputs/day25.txt").unwrap();
     let insts = parse_instructions(&puzzle_input);
 
     for a in 0.. {

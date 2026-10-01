@@ -58,7 +58,7 @@ fn part2(puzzle_input: &str) -> String {
 }
 
 pub fn run() {
-    let puzzle_input = std::fs::read_to_string("inputs/day2.txt").unwrap();
+    let puzzle_input = std::fs::read_to_string("../../adventofcode-data/2016/inputs/day2.txt").unwrap();
     println!("Part 1 answer: {}", part1(&puzzle_input));
     println!("Part 2 answer: {}", part2(&puzzle_input));
 }

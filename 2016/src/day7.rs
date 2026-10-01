@@ -60,7 +60,7 @@ fn test_supports_ssl() {
 }
 
 pub fn run() {
-    let puzzle_input = std::fs::read_to_string("inputs/day7.txt").unwrap();
+    let puzzle_input = std::fs::read_to_string("../../adventofcode-data/2016/inputs/day7.txt").unwrap();
     let part1_count = puzzle_input.lines().filter(|addr| supports_tls(addr)).count();
     let part2_count = puzzle_input.lines().filter(|addr| supports_ssl(addr)).count();
 

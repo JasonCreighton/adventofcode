@@ -47,7 +47,7 @@ fn test_extract_messages() {
 }
 
 pub fn run() {
-    let puzzle_input = std::fs::read_to_string("inputs/day6.txt").unwrap();
+    let puzzle_input = std::fs::read_to_string("../../adventofcode-data/2016/inputs/day6.txt").unwrap();
 
     let (part1_message, part2_message) = extract_messages(&puzzle_input);
 

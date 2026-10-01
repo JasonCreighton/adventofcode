@@ -123,7 +123,7 @@ dec a
 }
 
 pub fn run() {
-    let puzzle_input = std::fs::read_to_string("inputs/day23.txt").unwrap();
+    let puzzle_input = std::fs::read_to_string("../../adventofcode-data/2016/inputs/day23.txt").unwrap();
     let orig_insts = parse_instructions(&puzzle_input);
 
     let mut part1_registers = [7, 0, 0, 0];

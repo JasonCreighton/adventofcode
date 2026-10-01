@@ -9,7 +9,7 @@ stream_lines(In, Lines) :-
 
 read_package_dim :-
     retractall(package_dim(_,_,_)),    
-    file_lines("inputs/day2.txt", Lines),
+    file_lines("../../adventofcode-data/2015/inputs/day2.txt", Lines),
     member(Line, Lines),
     split_string(Line, "x", "", [LS, WS, HS]),
     number_string(L, LS),

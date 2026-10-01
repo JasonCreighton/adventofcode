@@ -10,7 +10,7 @@ read_file(File, Str) :-
 load_facts :-
     retractall(replacement(_, _)),
     retractall(puzzle_input(_)),
-    read_file("inputs/day19.txt", Str),
+    read_file("../../adventofcode-data/2015/inputs/day19.txt", Str),
     split_string(Str, "\n", "", Lines),
     member(Line, Lines),
     process_line(Line).

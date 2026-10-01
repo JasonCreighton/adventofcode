@@ -4,7 +4,7 @@ file_contents(File, Str) :-
        close(In)).
 
 puzzle_input(Dirs) :-
-    file_contents("inputs/day3.txt", Str),
+    file_contents("../../adventofcode-data/2015/inputs/day3.txt", Str),
     string_chars(Str, Dirs).
 
 direction_delta('<', [-1, 0]).

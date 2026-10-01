@@ -11,7 +11,7 @@ fn checksum(freqs: &HashMap<char, u32>) -> String {
 }
 
 pub fn run() {
-    let puzzle_input = std::fs::read_to_string("inputs/day4.txt").unwrap();
+    let puzzle_input = std::fs::read_to_string("../../adventofcode-data/2016/inputs/day4.txt").unwrap();
     let mut sum_of_real_sector_ids = 0;
 
     println!("Decrypted rooms matching northpole:");

@@ -85,7 +85,7 @@ fn test_decompressed_length() {
 }
 
 pub fn run() {
-    let puzzle_input = std::fs::read("inputs/day9.txt").unwrap();
+    let puzzle_input = std::fs::read("../../adventofcode-data/2016/inputs/day9.txt").unwrap();
 
     let part1_answer = decompress(&puzzle_input).len();
     let part2_answer = decompressed_length(&puzzle_input);

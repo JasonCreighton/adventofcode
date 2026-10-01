@@ -92,7 +92,7 @@ fn fewest_steps(map: &Map) -> u32 {
 }
 
 pub fn run() {
-    let puzzle_input = std::fs::read_to_string("inputs/day22.txt").unwrap();
+    let puzzle_input = std::fs::read_to_string("../../adventofcode-data/2016/inputs/day22.txt").unwrap();
     let nodes = parse_nodes(&puzzle_input);
     let viable_pairs = count_viable_pairs(&nodes);
     let map = extract_map(&nodes);

@@ -135,7 +135,7 @@ fn test_example() {
 }
 
 pub fn run() {
-    let maze = parse_maze(&std::fs::read_to_string("inputs/day24.txt").unwrap());
+    let maze = parse_maze(&std::fs::read_to_string("../../adventofcode-data/2016/inputs/day24.txt").unwrap());
 
     println!("Part 1 answer: {}", shortest_tour(&maze, false));
     println!("Part 2 answer: {}", shortest_tour(&maze, true));

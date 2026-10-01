@@ -22,7 +22,7 @@ line_command(Line, Command) :-
     line_parts_command(LineParts, Command).
 
 puzzle_input(Commands) :-
-    file_lines("inputs/day6.txt", Lines),
+    file_lines("../../adventofcode-data/2015/inputs/day6.txt", Lines),
     maplist(line_command, Lines, Commands).
 
 inside(rect(X1, Y1, X2, Y2), point(PX, PY)) :-

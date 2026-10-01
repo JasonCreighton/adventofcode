@@ -1,6 +1,6 @@
 load_wire_funcs :-
     setup_call_cleanup(
-        open("inputs/day7.txt", read, In),
+        open("../../adventofcode-data/2015/inputs/day7.txt", read, In),
         forall(process_input(In), true),
         close(In)).
 

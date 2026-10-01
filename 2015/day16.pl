@@ -9,7 +9,7 @@ read_file(File, Str) :-
 
 load_facts :-
     retractall(sue(_, _)),
-    read_file("inputs/day16.txt", Str),
+    read_file("../../adventofcode-data/2015/inputs/day16.txt", Str),
     split_string(Str, "\n", "", Lines),
     member(Line, Lines),
     split_string(Line, " ", ":,", Words),
