@@ -1,10 +1,9 @@
-s ← •Import "bqn-libs/strings.bqn"
-SplitLines ← {{(0≠≠¨𝕩)/𝕩} s.crlf s.Split 𝕩}
-Parse ← {•ParseFloat¨SplitLines 𝕩}
+u ← •Import "util.bqn"
+Parse ← {•ParseFloat¨u.SplitLines 𝕩}
 Part1 ← {+´<˝˘2↕𝕩}
 Part2 ← {Part1+˝˘3↕𝕩}
 
-inp ← •ParseFloat¨•FLines "../../adventofcode-data/2021/input1.txt"
+inp ← Parse u.GetInput 1
 ans ← •FLines "../../adventofcode-data/2021/answers1.txt"
 example ← Parse "
 199
@@ -21,4 +20,4 @@ example ← Parse "
 
 ! 7=Part1 example
 ! 5=Part2 example
-! ans≡•Repr¨ (Part1 inp)‿(Part2 inp)
+(Part1 inp)‿(Part2 inp) u.CheckAns 1
