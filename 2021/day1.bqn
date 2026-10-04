@@ -4,7 +4,6 @@ Part1 ← {+´<˝˘2↕𝕩}
 Part2 ← {Part1+˝˘3↕𝕩}
 
 inp ← Parse u.GetInput 1
-ans ← •FLines "../../adventofcode-data/2021/answers1.txt"
 ex ← Parse "
 199
 200
