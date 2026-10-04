@@ -5,7 +5,7 @@ Part2 ← {Part1+˝˘3↕𝕩}
 
 inp ← Parse u.GetInput 1
 ans ← •FLines "../../adventofcode-data/2021/answers1.txt"
-example ← Parse "
+ex ← Parse "
 199
 200
 208
@@ -18,6 +18,6 @@ example ← Parse "
 263
 "
 
-! 7=Part1 example
-! 5=Part2 example
+! 7=Part1 ex
+! 5=Part2 ex
 (Part1 inp)‿(Part2 inp) u.CheckAns 1
