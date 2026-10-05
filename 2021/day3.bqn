@@ -1,14 +1,6 @@
 u ← •Import "util.bqn"
 
 Parse ← {'1'=>u.SplitLines 𝕩}
-Bin2Dec ← {+´𝕩×⌽2⋆↕≠𝕩}
-Part1 ← {
-    gamma ← (+˝𝕩)>(≠𝕩)÷2
-    epsilon ← ¬gamma
-    (Bin2Dec gamma) × Bin2Dec epsilon
-}
-Part2 ← {𝕩 ⋄ "TODO"}
-
 ex ← Parse "
 00100
 11110
@@ -24,8 +16,35 @@ ex ← Parse "
 01010
 "
 
+Bin2Dec ← {+´𝕩×⌽2⋆↕≠𝕩}
+Part1 ← {
+    gamma ← (+˝𝕩)>(≠𝕩)÷2
+    epsilon ← ¬gamma
+    gamma ×○Bin2Dec epsilon
+}
+
+Majority ← {(+´𝕩)≥(≠𝕩)÷2}
+Minority ← {(+´𝕩)<(≠𝕩)÷2}
+Rating ← {
+    # Base case
+    1=≠𝕩 ? ⊏𝕩 ;
+    # Recursive case
+    t ← ⍉𝕩
+    hd ← ⊏t
+    tl ← ⍉1↓t
+    bit ← 𝕎hd
+    ftl ← (hd=bit)/tl
+    bit ∾ 𝕨 Rating ftl
+}
+Part2 ← {
+    oxy ← majority Rating 𝕩
+    co2 ← minority Rating 𝕩
+    
+    oxy ×○Bin2Dec co2
+}
+
 ! 198=Part1 ex
-# ! 230=Part2 ex
+! 230=Part2 ex
 
 inp ← Parse u.GetInput 3
 (Part1 inp)‿(Part2 inp) u.CheckAns 3
