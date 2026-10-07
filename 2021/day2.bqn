@@ -35,5 +35,4 @@ forward 2
 ! 150=Part1 ex
 ! 900=Part2 ex
 
-inp ← Parse u.GetInput 2
-(Part1 inp)‿(Part2 inp) u.CheckAns 2
+parse‿part1‿part2 u.RunDay 2

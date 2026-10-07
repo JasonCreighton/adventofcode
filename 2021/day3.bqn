@@ -46,5 +46,4 @@ Part2 ← {
 ! 198=Part1 ex
 ! 230=Part2 ex
 
-inp ← Parse u.GetInput 3
-(Part1 inp)‿(Part2 inp) u.CheckAns 3
+parse‿part1‿part2 u.RunDay 3

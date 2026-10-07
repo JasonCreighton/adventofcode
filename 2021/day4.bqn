@@ -46,5 +46,4 @@ Part2 ← ⌈_bingo
 ! 4512=Part1 ex
 ! 1924=Part2 ex
 
-inp ← Parse u.GetInput 4
-(Part1 inp)‿(Part2 inp) u.CheckAns 4
+parse‿part1‿part2 u.RunDay 4
