@@ -1,7 +1,12 @@
 u ← •Import "util.bqn"
 
-Parse ← {'1'=>u.SplitLines 𝕩}
-ex ← Parse "
+Parse ← {
+    digits ← 𝕩∊"01"
+    lineLen ← ⊑digits⊐0
+    ∘‿lineLen⥊digits/𝕩='1'
+}
+
+ex ← Parse u.Trim "
 00100
 11110
 10110

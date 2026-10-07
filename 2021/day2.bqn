@@ -1,7 +1,7 @@
 u ← •Import "util.bqn"
 
 Parse ← {
-    tab ← ⍉>{" " u.Split 𝕩}¨ u.SplitLines 𝕩
+    tab ← ⍉∘‿2⥊u.ws u.Split 𝕩
     dir ← 0⊏tab
     mag ← •ParseFloat¨1⊏tab
     fwd ← mag×{"forward"≡𝕩}¨dir

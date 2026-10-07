@@ -1,12 +1,12 @@
 u ← •Import "util.bqn"
 
 Parse ← {
-    lines ← u.SplitLines 𝕩
-    draw ← u.ToNums ⊑lines
-    boards ← ∘‿5‿5⥊>u.ToNums¨1↓lines
+    firstLineLen ← 𝕩⊐u.lf
+    draw ← u.ToNat firstLineLen↑𝕩
+    boards ← ∘‿5‿5⥊u.ToNat firstLineLen↓𝕩
     draw‿boards
 }
-ex ← Parse "
+ex ← Parse u.Trim "
 7,4,9,5,11,17,23,2,0,14,21,24,10,16,13,6,15,25,12,22,18,20,8,19,3,26,1
 
 22 13 17 11  0

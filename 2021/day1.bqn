@@ -1,5 +1,5 @@
 u ← •Import "util.bqn"
-Parse ← {•ParseFloat¨u.SplitLines 𝕩}
+Parse ← {u.ToNat 𝕩}
 Part1 ← {+´<˝˘2↕𝕩}
 Part2 ← {Part1+˝˘3↕𝕩}
 

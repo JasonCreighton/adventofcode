@@ -1,7 +1,16 @@
-s ← •Import "bqn-libs/strings.bqn"
-Split ⇐ s.Split
-ToNums ⇐ s.ToNums
-SplitLines ⇐ {{(0≠≠¨𝕩)/𝕩} s.crlf s.Split 𝕩}
+tab‿lf‿cr ⇐ @+9‿10‿13
+ws ⇐ ' '∾tab‿lf‿cr
+Trim ⇐ {
+    s ← 𝕩∊ws
+    (0-((⌽s)⊐0))↓(s⊐0)↓𝕩
+}
+Extract ← { mask 𝕊 a: 
+    start ← /(¬0»mask)∧mask
+    end ← /(¬0«mask)∧mask
+    start {𝕩↑𝕨↓a}¨ (1+end-start)
+}
+Split ⇐ {(¬𝕩∊𝕨) Extract 𝕩}
+ToNat ⇐ {•ParseFloat¨ (𝕩∊"0123456789") Extract 𝕩}
 GetInput ⇐ {•FChars ∾⟨"../../adventofcode-data/2021/input",•Fmt 𝕩,".txt"⟩}
 ForceStr ← {0==𝕩 ? •Fmt 𝕩 ; 𝕩}
 RunDay ⇐ { parse‿part1‿part2 𝕊 day:
