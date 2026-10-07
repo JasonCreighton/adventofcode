@@ -1,5 +1,6 @@
 s ← •Import "bqn-libs/strings.bqn"
 Split ⇐ s.Split
+ToNums ⇐ s.ToNums
 SplitLines ⇐ {{(0≠≠¨𝕩)/𝕩} s.crlf s.Split 𝕩}
 GetInput ⇐ {•FChars ∾⟨"../../adventofcode-data/2021/input",•Fmt 𝕩,".txt"⟩}
 ForceStr ← {0==𝕩 ? •Fmt 𝕩 ; 𝕩}
