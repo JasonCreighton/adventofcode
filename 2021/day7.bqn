@@ -7,8 +7,14 @@ Part1 ← {
     costRight ← ⌽+`+`»⌽𝕩
     ⌊´costLeft+costRight
 }
-Part2 ← {𝕩 ⋄ "TODO"}
+
+Part2 ← { 𝕊 crabs:
+    cost ← +`↕≠crabs
+    dist ← |-⌜˜↕≠crabs
+    ⌊´+˝crabs×dist⊏cost
+}
 
 ! 37=Part1 ex
+! 168=Part2 ex
 
 parse‿part1‿part2 u.RunDay 7
