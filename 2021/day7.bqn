@@ -6,11 +6,9 @@ ex ← Parse "16,1,2,0,4,2,7,1,2,14"
 # running sum of an impulse. 2-fold (Part 1) yields a ramp for the cost,
 # 3-fold (part 2) yields a quadratic.
 LTRCost ← {+`⍟𝕨»𝕩}
-MinCost ← {
-    costLeft ← 𝕨 LTRCost 𝕩
-    costRight ← ⌽𝕨 LTRCost⌽𝕩
-    ⌊´costLeft+costRight
-}
+# Cost at a point is the sum of moving all crabs on the left side and the right
+# side to that given point.
+MinCost ← {⌊´(𝕨 LTRCost 𝕩)+(𝕨⊸LTRCost⌾⌽ 𝕩)}
 
 Part1 ← 2⊸MinCost
 Part2 ← 3⊸MinCost
