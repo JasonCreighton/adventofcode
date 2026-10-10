@@ -2,17 +2,18 @@ u ← •Import "util.bqn"
 Parse ← {/⁼∧u.ToNat 𝕩}
 ex ← Parse "16,1,2,0,4,2,7,1,2,14"
 
-Part1 ← {
-    costLeft ← +`+`»𝕩
-    costRight ← ⌽+`+`»⌽𝕩
+# We can regard the cost of moving to the right of a crab as the N-fold
+# running sum of an impulse. 2-fold (Part 1) yields a ramp for the cost,
+# 3-fold (part 2) yields a quadratic.
+LTRCost ← {+`⍟𝕨»𝕩}
+MinCost ← {
+    costLeft ← 𝕨 LTRCost 𝕩
+    costRight ← ⌽𝕨 LTRCost⌽𝕩
     ⌊´costLeft+costRight
 }
 
-Part2 ← { 𝕊 crabs:
-    cost ← +`↕≠crabs
-    dist ← |-⌜˜↕≠crabs
-    ⌊´+˝crabs×dist⊏cost
-}
+Part1 ← 2⊸MinCost
+Part2 ← 3⊸MinCost
 
 ! 37=Part1 ex
 ! 168=Part2 ex
