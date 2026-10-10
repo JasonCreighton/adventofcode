@@ -1,5 +1,5 @@
-tab‿lf‿cr ⇐ @+9‿10‿13
-ws ⇐ ' '∾tab‿lf‿cr
+ws ⇐ @+⟨9,10,13,32⟩
+tab‿lf‿cr‿sp ⇐ ws
 Trim ⇐ {
     s ← 𝕩∊ws
     (0-((⌽s)⊐0))↓(s⊐0)↓𝕩
