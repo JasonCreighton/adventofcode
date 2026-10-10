@@ -4,7 +4,7 @@ Trim ⇐ {
     s ← 𝕩∊ws
     (0-((⌽s)⊐0))↓(s⊐0)↓𝕩
 }
-Extract ← { mask 𝕊 a: 
+Extract ⇐ { mask 𝕊 a: 
     start ← /(¬0»mask)∧mask
     end ← /(¬0«mask)∧mask
     start {𝕩↑𝕨↓a}¨ (1+end-start)
