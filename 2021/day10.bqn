@@ -1,8 +1,9 @@
 u ← •Import "util.bqn"
+sep ← 99
 braces ← "()[]{}<>"
-braceCodes ← ⟨1,¯1,2,¯2,3,¯3,4,¯4⟩
+braceCodes ← ⟨1,¯1,2,¯2,3,¯3,4,¯4,sep⟩
 part1Points ← ⟨0,3,57,1197,25137⟩
-Parse ← {{(braces⊐𝕩)⊏braceCodes}¨ (𝕩∊"()[]{}<>") u.Extract 𝕩}
+Parse ← {(braces⊐𝕩)⊏braceCodes}
 ex ← Parse "
 [({(<(())[]>[[{[]{<()<>>
 [(()[<>])]({[<{<<[]>>(
@@ -24,7 +25,8 @@ RemoveAdjPairs ← {
 
 Reduce ← {
     prev ← 0
-    {prev ↩ 𝕩 ⋄ RemoveAdjPairs 𝕩}•_while_{prev≢𝕩} 𝕩
+    flat ← {prev ↩ 𝕩 ⋄ RemoveAdjPairs 𝕩}•_while_{prev≢𝕩} 𝕩
+    (flat≠sep) u.Extract flat
 }
 
 Part1Score ← {
@@ -32,10 +34,10 @@ Part1Score ← {
 }
 
 Part1 ← { 𝕊 lines:
-    +´ {Part1Score Reduce 𝕩}¨ lines
+    +´ Part1Score¨ Reduce lines
 }
 Part2 ← { 𝕊 lines:
-    r ← Reduce¨ lines
+    r ← Reduce lines
     incomplete ← ({∧´𝕩>0}¨r)/r
     scored ← {+´𝕩×5⋆↕≠𝕩}¨ incomplete
     median ← (((≠scored)-1)÷2)⊑∧scored
