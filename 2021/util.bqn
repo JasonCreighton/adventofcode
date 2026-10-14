@@ -24,4 +24,5 @@ RunDay ⇐ { parse‿part1‿part2 𝕊 day:
     •Show day∾t_us
     ans ← ForceStr¨ans1‿ans2
     (∾⟨"Day ",•Fmt 𝕩," mismatch: Expected ",•Repr expected,", got ",•Repr ans⟩)!ans≡expected
+    t_us
 }
