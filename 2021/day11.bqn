@@ -34,8 +34,18 @@ Step ← { 𝕊 energy‿numFlashes:
 }
 
 Part1 ← {1⊑Step⍟100 𝕩‿0}
-Part2 ← {𝕩 ⋄ "TODO"}
+Part2 ← {
+    n ← 0
+    prevf ← 0
+    { 𝕊 e‿f:
+        prevf ↩ f
+        n +↩ 1
+        Step e‿f
+    }•_while_{ 𝕊 e‿f: f≠prevf+≠⥊e} 𝕩‿0
+    n
+}
 
-! 1656= Part1 ex
+! 1656=Part1 ex
+! 195=Part2 ex
 
 parse‿part1‿part2 u.RunDay 11
