@@ -4,10 +4,10 @@ Trim ⇐ {
     s ← 𝕩∊ws
     (0-((⌽s)⊐0))↓(s⊐0)↓𝕩
 }
-Extract ⇐ { mask 𝕊 a: 
-    start ← /(¬0»mask)∧mask
-    end ← /(¬0«mask)∧mask
-    start {𝕩↑𝕨↓a}¨ (1+end-start)
+Extract ⇐ { mask 𝕊 a:
+    start ← /(¬»mask)∧mask
+    end   ← /(¬«mask)∧mask
+    (1+end-start) ↑¨ start ↓¨ <a
 }
 Split ⇐ {(¬𝕩∊𝕨) Extract 𝕩}
 ToNat ⇐ {•ParseFloat¨ (𝕩∊"0123456789") Extract 𝕩}
