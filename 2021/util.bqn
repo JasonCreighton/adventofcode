@@ -15,7 +15,8 @@ GetInput ⇐ {•FChars ∾⟨"../../adventofcode-data/2021/input",•Fmt 𝕩,"
 ForceStr ← {0==𝕩 ? •Fmt 𝕩 ; 𝕩}
 RunDay ⇐ { parse‿part1‿part2 𝕊 day:
     expected ← •FLines ∾⟨"../../adventofcode-data/2021/answers",•Fmt day,".txt"⟩
-    t0 ← •MonoTime 0 ⋄ inp ← Parse GetInput day
+    rawInp ← GetInput day
+    t0 ← •MonoTime 0 ⋄ inp ← Parse rawInp
     t1 ← •MonoTime 0 ⋄ ans1 ← Part1 inp
     t2 ← •MonoTime 0 ⋄ ans2 ← Part2 inp
     t3 ← •MonoTime 0
