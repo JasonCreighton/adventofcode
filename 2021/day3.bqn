@@ -1,10 +1,6 @@
 u ← •Import "util.bqn"
 
-Parse ← {
-    digits ← 𝕩∊"01"
-    lineLen ← ⊑digits⊐0
-    ∘‿lineLen⥊digits/𝕩='1'
-}
+Parse ← {'1'=(𝕩∊"01") u.ExtractRect 𝕩}
 
 ex ← Parse u.Trim "
 00100

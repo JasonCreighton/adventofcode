@@ -1,8 +1,5 @@
 u ← •Import "util.bqn"
-ToHist ← { 𝕊 list:
-    {+´list=𝕩}¨↕9
-}
-Parse ← ToHist u.ToNat
+Parse ← {9↑/⁼∧u.ToNat 𝕩}
 ex ← Parse "3,4,3,1,2"
 
 Step ← { 𝕊 hist:

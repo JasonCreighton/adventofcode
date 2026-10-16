@@ -1,5 +1,6 @@
 ws ⇐ @+⟨9,10,13,32⟩
 tab‿lf‿cr‿sp ⇐ ws
+digits ⇐ "0123456789"
 Trim ⇐ {
     s ← 𝕩∊ws
     (0-((⌽s)⊐0))↓(s⊐0)↓𝕩
@@ -9,8 +10,11 @@ Extract ⇐ { mask 𝕊 a:
     end   ← /(¬«mask)∧mask
     (1+end-start) ↑¨ start ↓¨ <a
 }
-Split ⇐ {(¬𝕩∊𝕨) Extract 𝕩}
-ToNat ⇐ {•ParseFloat¨ (𝕩∊"0123456789") Extract 𝕩}
+ExtractRect ⇐ { mask 𝕊 a:
+    width ← ⊑((⊑mask⊐1)↓mask)⊐0
+    ∘‿width⥊mask/a
+}
+ToNat ⇐ {•ParseFloat¨ (𝕩∊digits) Extract 𝕩}
 GetInput ⇐ {•FChars ∾⟨"../../adventofcode-data/2021/input",•Fmt 𝕩,".txt"⟩}
 ForceStr ← {0==𝕩 ? •Fmt 𝕩 ; 𝕩}
 RunDay ⇐ { parse‿part1‿part2 𝕊 day:

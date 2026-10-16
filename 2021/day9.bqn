@@ -1,9 +1,5 @@
 u ← •Import "util.bqn"
-Parse ← {
-    digits ← 𝕩∊"0123456789"
-    firstLineLen ← ⊑digits⊐0
-    ∘‿firstLineLen⥊digits/𝕩-'0'
-}
+Parse ← {'0'-˜(𝕩∊u.digits) u.ExtractRect 𝕩}
 ex ← Parse u.Trim "
 2199943210
 3987894921
