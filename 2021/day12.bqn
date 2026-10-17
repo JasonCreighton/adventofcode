@@ -3,17 +3,17 @@ Small ← {𝕩<0}
 start ← ¯1
 end ← ¯2
 Parse ← {
-    raw ← ⍉∘‿2⥊(¬𝕩∊'-'∾u.ws) u.Extract 𝕩
-    names ← ⟨"start","end"⟩∾⥊raw
-    sm ← {∧´(𝕩≥'a')∧𝕩≤'z'}¨ names
-    codes ← (1+↕≠names)×sm⊏⟨1,¯1⟩
-    tab ← (names⊐raw)⊏codes
-    from ← (0⊏tab)∾1⊏tab
-    to ← (1⊏tab)∾0⊏tab
-    
-    # Remove edges to "start" or from "end"
-    keep ← ¬(from=end)∨(to=start)
-    (keep/from)‿(keep/to)‿(Small keep/to)
+    tab ← ⍉∘‿2⥊(¬𝕩∊'-'∾u.ws) u.Extract 𝕩
+    fromname ← (0⊏tab)∾1⊏tab
+    toname   ← (1⊏tab)∾0⊏tab
+    name ← ⍷fromname∾toname
+    start‿end ← name⊐⟨"start","end"⟩
+    from ← name⊐fromname
+    to   ← name⊐toname
+    sm ← {∧´(𝕩≥'a')∧𝕩≤'z'}¨ name
+    fromto ← {𝕊 f: (≠name)↑/⁼((from=f)∧(from≠end)∧to≠start)/to}¨↕≠name
+
+    fromto‿sm‿start‿end
 }
 
 ex1 ← Parse "
@@ -58,29 +58,27 @@ pj-fs
 start-RW
 "
 
-PathsToEnd ← { part 𝕊 from‿to‿sm:
-    Part1DestOk ← { path 𝕊 loc: ¬sm∧to∊path}
-    Part2DestOk ← { path 𝕊 loc:
-        effpath ← path∾<loc
-        smtwice ← ∨´Small (0<⊒effpath)/effpath
+PathsToEnd ← { part 𝕊 fromto‿sm‿start‿end:
+    Part1DestOk ← { visited 𝕊 loc: (¬sm)∨visited=0}
+    Part2DestOk ← { visited 𝕊 loc:
+        smtwice ← ∨´sm∧visited=2
         effsm ← sm∧smtwice
-        ¬effsm∧to∊effpath
+        (¬effsm)∨visited=0
     }
     destok ← { part=1 ? part1destok ; part2destok }
     Go ← {
         # Base case
-        path 𝕊 loc: loc=end ? ⟨path∾⟨end⟩⟩ ;
+        visited 𝕊 loc: loc=end ? 1 ;
         # Recursive case
-        path 𝕊 loc:
-            mask ← (from=loc)∧(path DestOk loc)
-            dests ← mask/to
-            ∾{(path∾⟨loc⟩) Go 𝕩}¨dests
+        visited 𝕊 loc:
+            dests ← /(loc⊑fromto)∧(visited DestOk loc)
+            +´{(1⊸+⌾(𝕩⊸⊏) visited) Go 𝕩}¨dests
     }
-    ⟨⟩ Go start
+    ((≠fromto)⥊0) Go start
 }
 
-Part1 ← {≠1 PathsToEnd 𝕩}
-Part2 ← {≠2 PathsToEnd 𝕩}
+Part1 ← {1 PathsToEnd 𝕩}
+Part2 ← {2 PathsToEnd 𝕩}
 
 ! 10=Part1 ex1
 ! 19=Part1 ex2
