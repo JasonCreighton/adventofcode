@@ -1,14 +1,21 @@
 u ← •Import "util.bqn"
-Small ← {∧´(𝕩≥'a')∧𝕩≤'z'}
+Small ← {𝕩<0}
+start ← ¯1
+end ← ¯2
 Parse ← {
     raw ← ⍉∘‿2⥊(¬𝕩∊'-'∾u.ws) u.Extract 𝕩
-    from ← (0⊏raw)∾1⊏raw
-    to   ← (1⊏raw)∾0⊏raw
-    sm   ← Small¨ to
+    names ← ⟨"start","end"⟩∾⥊raw
+    sm ← {∧´(𝕩≥'a')∧𝕩≤'z'}¨ names
+    codes ← (1+↕≠names)×sm⊏⟨1,¯1⟩
+    tab ← (names⊐raw)⊏codes
+    from ← (0⊏tab)∾1⊏tab
+    to ← (1⊏tab)∾0⊏tab
+    
     # Remove edges to "start" or from "end"
-    keep ← ¬(from≡¨<"end")∨(to≡¨<"start")
-    (keep/from)‿(keep/to)‿(keep/sm)
+    keep ← ¬(from=end)∨(to=start)
+    (keep/from)‿(keep/to)‿(Small keep/to)
 }
+
 ex1 ← Parse "
 start-A
 start-b
@@ -55,21 +62,21 @@ PathsToEnd ← { part 𝕊 from‿to‿sm:
     Part1DestOk ← { path 𝕊 loc: ¬sm∧to∊path}
     Part2DestOk ← { path 𝕊 loc:
         effpath ← path∾<loc
-        smtwice ← ∨´Small¨ (0<⊒effpath)/effpath
+        smtwice ← ∨´Small (0<⊒effpath)/effpath
         effsm ← sm∧smtwice
         ¬effsm∧to∊effpath
     }
     destok ← { part=1 ? part1destok ; part2destok }
     Go ← {
         # Base case
-        path 𝕊 "end": ⟨path∾⟨"end"⟩⟩ ;
+        path 𝕊 loc: loc=end ? ⟨path∾⟨end⟩⟩ ;
         # Recursive case
         path 𝕊 loc:
-            mask ← (from≡¨<loc)∧(path DestOk loc)
+            mask ← (from=loc)∧(path DestOk loc)
             dests ← mask/to
             ∾{(path∾⟨loc⟩) Go 𝕩}¨dests
     }
-    ⟨⟩ Go "start"
+    ⟨⟩ Go start
 }
 
 Part1 ← {≠1 PathsToEnd 𝕩}
