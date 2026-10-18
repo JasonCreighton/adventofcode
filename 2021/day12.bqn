@@ -1,7 +1,8 @@
+# I originally had a slow DFS here, and I replaced it with a BFS very directly
+# inspired by dzaima's solution:
+# https://github.com/dzaima/aoc/blob/c978147121006eb90d68db18a383a88dcfb90812/2021/BQN/12.bqn
+
 u ← •Import "util.bqn"
-Small ← {𝕩<0}
-start ← ¯1
-end ← ¯2
 Parse ← {
     tab ← ⍉∘‿2⥊(¬𝕩∊'-'∾u.ws) u.Extract 𝕩
     fromname ← (0⊏tab)∾1⊏tab
@@ -11,9 +12,9 @@ Parse ← {
     from ← name⊐fromname
     to   ← name⊐toname
     sm ← {∧´(𝕩≥'a')∧𝕩≤'z'}¨ name
-    fromto ← {𝕊 f: (≠name)↑/⁼((from=f)∧(from≠end)∧to≠start)/to}¨↕≠name
+    map ← {(from=𝕩)/to}¨↕≠name
 
-    fromto‿sm‿start‿end
+    map‿sm‿start‿end
 }
 
 ex1 ← Parse "
@@ -58,23 +59,19 @@ pj-fs
 start-RW
 "
 
-PathsToEnd ← { part 𝕊 fromto‿sm‿start‿end:
-    Part1DestOk ← { visited 𝕊 loc: (¬sm)∨visited=0}
-    Part2DestOk ← { visited 𝕊 loc:
-        smtwice ← ∨´sm∧visited=2
-        effsm ← sm∧smtwice
-        (¬effsm)∨visited=0
+PathsToEnd ← { part 𝕊 map‿sm‿start‿end:
+    caves ← (↕≠map) (¬∘∊/⊣) ⟨start,end⟩
+    eye ← =⌜˜↕≠map
+    Step ← { 𝕊 count‿vmask‿sse‿loc:
+        nested ← { 𝕊 dest:
+            adj ← loc∊dest⊑map
+            ok ← (¬dest⊑sm)∨¬dest⊏˘vmask
+            sel ← adj∧ok∨sse
+            ⟨(dest⊏eye)∨⎉1 sel/vmask,sel/sse∧ok,(+´sel)⥊dest⟩
+        }¨ caves
+        ⟨count++´loc∊end⊑map,∾0⊸⊑¨nested,∾1⊸⊑¨nested,∾2⊸⊑¨nested⟩
     }
-    destok ← { part=1 ? part1destok ; part2destok }
-    Go ← {
-        # Base case
-        visited 𝕊 loc: loc=end ? 1 ;
-        # Recursive case
-        visited 𝕊 loc:
-            dests ← /(loc⊑fromto)∧(visited DestOk loc)
-            +´{(1⊸+⌾(𝕩⊸⊏) visited) Go 𝕩}¨dests
-    }
-    ((≠fromto)⥊0) Go start
+    0⊑Step•_while_{𝕊 c‿v‿s‿loc: 0≠≠loc} ⟨0,1‿(≠map)⥊0,⟨part=2⟩,⟨start⟩⟩
 }
 
 Part1 ← {1 PathsToEnd 𝕩}
