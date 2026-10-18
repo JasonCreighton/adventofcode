@@ -12,9 +12,9 @@ Parse ← {
     from ← name⊐fromname
     to   ← name⊐toname
     sm ← {∧´(𝕩≥'a')∧𝕩≤'z'}¨ name
-    map ← {(from=𝕩)/to}¨↕≠name
+    tofrom ← {(to=𝕩)/from}¨↕≠name
 
-    map‿sm‿start‿end
+    tofrom‿sm‿start‿end
 }
 
 ex1 ← Parse "
@@ -59,19 +59,19 @@ pj-fs
 start-RW
 "
 
-PathsToEnd ← { part 𝕊 map‿sm‿start‿end:
-    caves ← (↕≠map) (¬∘∊/⊣) ⟨start,end⟩
-    eye ← =⌜˜↕≠map
+PathsToEnd ← { part 𝕊 tofrom‿sm‿start‿end:
+    interior ← (↕≠tofrom) (¬∘∊/⊣) ⟨start,end⟩
+    eye ← =⌜˜↕≠tofrom
     Step ← { 𝕊 count‿vmask‿sse‿loc:
         nested ← { 𝕊 dest:
-            adj ← loc∊dest⊑map
+            adj ← loc∊dest⊑tofrom
             ok ← (¬dest⊑sm)∨¬dest⊏˘vmask
             sel ← adj∧ok∨sse
             ⟨(dest⊏eye)∨⎉1 sel/vmask,sel/sse∧ok,(+´sel)⥊dest⟩
-        }¨ caves
-        ⟨count++´loc∊end⊑map,∾0⊸⊑¨nested,∾1⊸⊑¨nested,∾2⊸⊑¨nested⟩
+        }¨ interior
+        ⟨count++´loc∊end⊑tofrom,∾0⊸⊑¨nested,∾1⊸⊑¨nested,∾2⊸⊑¨nested⟩
     }
-    0⊑Step•_while_{𝕊 c‿v‿s‿loc: 0≠≠loc} ⟨0,1‿(≠map)⥊0,⟨part=2⟩,⟨start⟩⟩
+    0⊑Step•_while_{𝕊 c‿v‿s‿loc: 0≠≠loc} ⟨0,1‿(≠tofrom)⥊0,⟨part=2⟩,⟨start⟩⟩
 }
 
 Part1 ← {1 PathsToEnd 𝕩}
