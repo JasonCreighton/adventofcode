@@ -27,17 +27,12 @@ Part2 ← { 𝕊 map:
     # neighboring cells until a fixed point is reached.
     validArea ← map≠9
     basinId ← 1+(≢map)⥊↕≠⥊map
-    prevBasin ← 0
-    basin ← validArea×basinId
+    initBasin ← validArea×basinId
 
-    { 𝕤
-        prevBasin ↩ basin
-        neigh ← basin∾(0 Neighbors basin)
-        # When we take the max of all neighbors, the 0s that represent the
-        # boundaries between basins get some other value, so we have to
-        # re-multiply by validArea to clear them again.
-        basin ↩ validArea×⌈˝neigh
-    }•_while_{𝕤 ⋄ basin≢prevBasin} @
+    # When we take the max of all neighbors, the 0s that represent the
+    # boundaries between basins get some other value, so we have to
+    # re-multiply by validArea to clear them again.
+    basin ← {validArea×⌈˝𝕩∾(0 Neighbors 𝕩)} u._fix initBasin
 
     hist ← /⁼∧⥊basin
     basinSizes ← 1↓(hist≠0)/hist

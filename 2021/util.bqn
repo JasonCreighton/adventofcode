@@ -15,6 +15,11 @@ ExtractRect ⇐ { mask 𝕊 a:
     ∘‿width⥊mask/a
 }
 ToNat ⇐ {•ParseFloat¨ (𝕩∊digits) Extract 𝕩}
+_fix ⇐ { 𝔽 _fix v0:
+    v1 ← 𝔽 v0
+    prev ← v0
+    𝔽•_while_{cont ← 𝕩≢prev ⋄ prev ↩ 𝕩 ⋄ cont} v1
+}
 GetInput ⇐ {•FChars ∾⟨"../../adventofcode-data/2021/input",•Fmt 𝕩,".txt"⟩}
 ForceStr ← {0==𝕩 ? •Fmt 𝕩 ; 𝕩}
 RunDay ⇐ { parse‿part1‿part2 𝕊 day:
