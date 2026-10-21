@@ -15,6 +15,11 @@ ExtractRect ⇐ { mask 𝕊 a:
     ∘‿width⥊mask/a
 }
 ToNat ⇐ {•ParseFloat¨ (𝕩∊digits) Extract 𝕩}
+ToNum ⇐ {
+    d ← 𝕩∊digits
+    m ← (𝕩='-')∧«d # Only the minus signs that precede digits
+    •ParseFloat¨ (d∨m) Extract 𝕩
+}
 _fix ⇐ { 𝔽 _fix v0:
     v1 ← 𝔽 v0
     prev ← v0
