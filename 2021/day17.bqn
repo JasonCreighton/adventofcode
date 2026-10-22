@@ -13,6 +13,13 @@
 #
 # Then the height is given by the sum of 1 to dy, or (dy*(1+dy))/2, or h=45 in
 # the example.
+#
+# Part 2:
+# 
+# We figure out a conservative range for the starting x and y velocities that
+# we are going to search. Then we simulate each of them for a conservative
+# number of time steps, then we enumerable each dx and dy choices that are in
+# the target simultaneously and then deduplicate them to find a count.
 
 u ← •Import "util.bqn"
 Parse ← u.ToNum
@@ -24,7 +31,6 @@ MaxDY ← {𝕊 x1‿x2‿y1‿y2: (-y1)-1}
 
 StepX ← {𝕊 x‿dx: ⟨x+dx,dx-×dx⟩ }
 StepY ← {𝕊 y‿dy: ⟨y+dy,dy-1  ⟩ }
-
 
 Part1 ← {
     dy ← MaxDY 𝕩
