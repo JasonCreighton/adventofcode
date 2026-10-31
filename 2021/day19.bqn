@@ -270,8 +270,13 @@ Part1 ← {
     tform ← AllScannerTransforms fp
     ≠⍷∾tform {(<𝕨) Transform¨ <˘⊑𝕩}¨ fp
 }
-Part2 ← { 𝕩 ⋄ "TODO" }
+Part2 ← {
+    fp ← Fingerprint¨ 𝕩
+    tform ← AllScannerTransforms fp
+    ⌈´⥊{+´|𝕨-𝕩}⌜˜ ⊑¨ tform
+}
 
 ! 79=Part1 ex
+! 3621=Part2 ex
 
 parse‿part1‿part2 u.RunDay 19
