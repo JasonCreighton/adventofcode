@@ -1,6 +1,6 @@
 u ← •Import "util.bqn"
 
-Parse ← {⍉∘‿4⥊u.ToNat 𝕩}
+Parse ← {⍉∘‿4⥊u.ToNum 𝕩}
 
 ex ← Parse "
 0,9 -> 5,9

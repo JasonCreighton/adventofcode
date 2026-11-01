@@ -1,5 +1,5 @@
 u ← •Import "util.bqn"
-Parse ← {9↑/⁼∧u.ToNat 𝕩}
+Parse ← {9↑/⁼∧u.ToNum 𝕩}
 ex ← Parse "3,4,3,1,2"
 
 Step ← { 𝕊 hist:

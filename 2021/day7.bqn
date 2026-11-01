@@ -1,5 +1,5 @@
 u ← •Import "util.bqn"
-Parse ← {/⁼∧u.ToNat 𝕩}
+Parse ← {/⁼∧u.ToNum 𝕩}
 ex ← Parse "16,1,2,0,4,2,7,1,2,14"
 
 # We can regard the cost of moving to the right of a crab as the N-fold

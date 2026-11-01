@@ -1,7 +1,7 @@
 u ← •Import "util.bqn"
 Parse ← {
     dots‿folds ← (𝕩⊐'f') (↑⋈↓) 𝕩
-    d ← ⍉∘‿2⥊u.ToNat dots
+    d ← ⍉∘‿2⥊u.ToNum dots
     f ← ⍉∘‿2⥊(folds∊"xy"∾u.digits) u.Extract folds
     dx ← 0⊏d
     dy ← 1⊏d
