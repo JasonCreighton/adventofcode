@@ -1,5 +1,3 @@
-# Just doing something stupid so I can see what part 2 is.
-
 u ← •Import "util.bqn"
 Parse ← { ⟨1,3⟩⊏u.ToNum 𝕩 }
 
@@ -32,8 +30,33 @@ Part1 ← { 𝕊 pos:
     dicerolls×(win-1)⊑losescore
 }
 
-Part2 ← { 𝕩 ⋄ "TODO" }
+diceOutcomes ← ⟨3‿1,4‿3,5‿6,6‿7,7‿6,8‿3,9‿1⟩ # movement‿frequency
+
+memo ← ⟨⟩ •HashMap ⟨⟩
+DiracWinLoss ← { 𝕊 key:
+    # "us" is the side-to-move, "them" is the other side
+    uspos‿thempos‿usscore‿themscore ← key
+    {
+        # Base cases:
+        usscore  ≥21 ? ⟨1,0⟩ ;
+        themscore≥21 ? ⟨0,1⟩ ;
+        # Already seen:
+        memo.Has key ? memo.Get key ;
+        # Not-yet-seen, recursive case:
+        res ← +´ {𝕊 roll‿freq:
+            p ← 1+10|roll+uspos-1
+            # Swap side-to-move for recursive call
+            them‿us ← DiracWinLoss thempos‿p‿themscore‿(usscore+p)
+            ⟨freq×us,freq×them⟩
+        }¨ diceOutcomes
+        key memo.Set res
+        res
+    }
+}
+
+Part2 ← { 𝕊 p1‿p2: ⌈´ DiracWinLoss p1‿p2‿0‿0 }
 
 ! 739785=Part1 ex
+! 444356092776315=Part2 ex
 
 parse‿part1‿part2 u.RunDay 21
